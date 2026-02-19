@@ -1,0 +1,8 @@
+/* user-profile  */
+@import url(./user-profile/user-profile.css);
+
+/* dashboard  */
+@import url(./Dashboard/dashboard.css);
+
+/* employees  */
+@import url(./Employees/employees.css);
