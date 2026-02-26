@@ -2,3 +2,60 @@
 @import url("variables.css");
 @import url("../../components/component.css");
 @import url("../../pages/pages.css");
+
+.custom-select {
+    position: relative;
+    width: max-content;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+.selected {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.selected img {
+    width: 100%;
+    height: 20px;
+    object-fit: cover;
+}
+
+.options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 150%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    display: none;
+    z-index: 10;    
+}
+
+.options li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.options li:hover {
+    background: #f0f0f0;
+}
+
+.options img {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+}

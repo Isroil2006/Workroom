@@ -3,6 +3,20 @@ const loggedInInfo = JSON.parse(localStorage.getItem("currentUser"));
 const allUsers = JSON.parse(localStorage.getItem("users")) || [];
 const user = allUsers.find((u) => u.email === loggedInInfo.email) || loggedInInfo;
 
+const currentLang = localStorage.getItem("language") || "uz";
+const t = (key) => translations[currentLang][key] || key;
+const translations = {
+    uz: {
+        search: "Qidiruv",
+    },
+    en: {
+        search: "Search",
+    },
+    ru: {
+        search: "Поиск",
+    },
+};
+
 navbar.innerHTML = `
     <div class="search-box">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,10 +28,34 @@ navbar.innerHTML = `
             />
         </svg>
 
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="${t("search")}" />
     </div>
 
     <div class="user-nav">
+
+        <div class="custom-select" id="language-selector">
+            <div class="selected">
+                <img src="../assets/images/uzb-flag.png" alt="" />
+                <span>UZ</span>
+            </div>
+
+            <ul class="options">
+                <li data-value="uz">
+                    <img src="../assets/images/uzb-flag.png" alt="" />
+                    UZ
+                </li>
+
+                <li data-value="en">
+                    <img src="../assets/images/usa-flag.png" alt="" />
+                    EN
+                </li>
+
+                <li data-value="ru">
+                    <img src="../assets/images/rus-flag.png" alt="" />
+                    RU
+                </li>
+            </ul>
+        </div>
         <button>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
