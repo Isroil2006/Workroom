@@ -1,4 +1,8 @@
+import { translations } from "./translations.js";
+
 const userProfileBtn = document.querySelector(".user-profile-btn");
+let currentLang = localStorage.getItem("language") || "uz";
+const t = (key) => translations[currentLang][key] || key;
 
 // tablar
 const projectsHTML = `
@@ -22,7 +26,7 @@ const projectsHTML = `
                             fill="currentColor"
                         />
                     </svg>
-                    Created Sep 12, 2020
+                    ${t("created_sep")} 12, 2020
                 </span>
 
                 <span class="level">
@@ -32,24 +36,24 @@ const projectsHTML = `
                             fill="currentColor"
                         />
                     </svg>
-                    Medium
+                    ${t("medium")}
                 </span>
             </div>
         </div>
         <span class="line"></span>
         <div class="project-stats">
-            <h3>Project Data</h3>
+            <h3>${t("project_data")}</h3>
             <div class="stats-box">
                 <div class="stat-item">
-                    <span class="stats-label">All tasks</span>
+                    <span class="stats-label">${t("all_tasks")}</span>
                     <span class="stats-value">34</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stats-label">Active tasks</span>
+                    <span class="stats-label">${t("active_tasks")}</span>
                     <span class="stats-value">13</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stats-label">Assignees</span>
+                    <span class="stats-label">${t("assignees")}</span>
                     <img src="/pages/user-profile/images/user-profile-project-avatars.png" alt="" />
                 </div>
             </div>
@@ -75,7 +79,7 @@ const projectsHTML = `
                             fill="currentColor"
                         />
                     </svg>
-                    Created Sep 12, 2020
+                    ${t("created_sep")} 12, 2020
                 </span>
 
                 <span class="level">
@@ -85,24 +89,24 @@ const projectsHTML = `
                             fill="currentColor"
                         />
                     </svg>
-                    Medium
+                    ${t("medium")}
                 </span>
             </div>
         </div>
         <span class="line"></span>
         <div class="project-stats">
-            <h3>Project Data</h3>
+            <h3>${t("project_data")}</h3>
             <div class="stats-box">
                 <div class="stat-item">
-                    <span class="stats-label">All tasks</span>
+                    <span class="stats-label">${t("all_tasks")}</span>
                     <span class="stats-value">50</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stats-label">Active tasks</span>
+                    <span class="stats-label">${t("active_tasks")}</span>
                     <span class="stats-value">24</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stats-label">Assignees</span>
+                    <span class="stats-label">${t("assignees")}</span>
                     <img src="/pages/user-profile/images/user-profile-project-avatars.png" alt="" />
                 </div>
             </div>
@@ -128,7 +132,7 @@ const projectsHTML = `
                             fill="currentColor"
                         />
                     </svg>
-                    Created Sep 12, 2020
+                    ${t("created_sep")} 12, 2020
                 </span>
 
                 <span style="color: #0ac947" class="level">
@@ -138,24 +142,24 @@ const projectsHTML = `
                             fill="currentColor"
                         />
                     </svg>
-                    Low
+                    ${t("low")}
                 </span>
             </div>
         </div>
         <span class="line"></span>
         <div class="project-stats">
-            <h3>Project Data</h3>
+            <h3>${t("project_data")}</h3>
             <div class="stats-box">
                 <div class="stat-item">
-                    <span class="stats-label">All tasks</span>
-                    <span class="stats-value">34</span>
+                    <span class="stats-label">${t("all_tasks")}</span>
+                    <span class="stats-value">23</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stats-label">Active tasks</span>
-                    <span class="stats-value">13</span>
+                    <span class="stats-label">${t("active_tasks")}</span>
+                    <span class="stats-value">20</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stats-label">Assignees</span>
+                    <span class="stats-label">${t("assignees")}</span>
                     <img src="/pages/user-profile/images/user-profile-project-avatars.png" alt="" />
                 </div>
             </div>
@@ -217,7 +221,7 @@ const userSettings = `
                 />
             </svg>
         </button>
-        <h2>Settings</h2>
+        <h2>${t("settings")}</h2>
     </div>
     <div class="wrapper">
         <div class="user-setting-navigation">
@@ -225,49 +229,49 @@ const userSettings = `
                 <i class="setting-icon">
                     <img src="/pages/user-profile/images/setting-icons/account.svg" alt="" />
                 </i>
-                Account
+                ${t("account")}
             </button>
 
             <button class="user-setting-navigation-btn">
                 <i class="setting-icon">
                     <img src="/pages/user-profile/images/setting-icons/notifications.svg" alt="" />
                 </i>
-                Notifications
+                ${t("notifications")}
             </button>
 
             <button class="user-setting-navigation-btn">
                 <i class="setting-icon">
                     <img src="/pages/user-profile/images/setting-icons/company.svg" alt="" />
                 </i>
-                My Company
+                ${t("myCompany")}
             </button>
 
             <button class="user-setting-navigation-btn">
                 <i class="setting-icon">
                     <img src="/pages/user-profile/images/setting-icons/apps.svg" alt="" />
                 </i>
-                Connected Apps
+                ${t("connectedApps")}
             </button>
 
             <button class="user-setting-navigation-btn">
                 <i class="setting-icon">
                     <img src="/pages/user-profile/images/setting-icons/payments.svg" alt="" />
                 </i>
-                Payments
+                ${t("payments")}
             </button>
 
             <button class="user-setting-navigation-btn">
                 <i class="setting-icon">
                     <img src="/pages/user-profile/images/setting-icons/confidentiality.svg" alt="" />
                 </i>
-                Confidentiality
+                ${t("confidentiality")}
             </button>
 
             <button class="user-setting-navigation-btn">
                 <i class="setting-icon">
                     <img src="/pages/user-profile/images/setting-icons/safety.svg" alt="" />
                 </i>
-                Safety
+                ${t("safety")}
             </button>
         </div>
         <div class="user-setting-navigation-content">
@@ -279,14 +283,40 @@ const userSettings = `
 // setting contentlari
 const accountContent = `
     <div class="account-content">
-        <h2>Account</h2>
+        <h2>${t("account")}</h2>
     </div>
 `;
 const notificationsContent = `
     <div class="notifications-content">
-        <h2>Notifications</h2>
+        <h2>${t("notifications")}</h2>
     </div>
 `;
+const myCompanyContent = `
+    <div class="my-company-content">
+        <h2>${t("myCompany")}</h2>
+    </div>
+`;
+const connectedAppsContent = `
+    <div class="connected-apps-content">
+        <h2>${t("connectedApps")}</h2>
+    </div>
+`;
+const paymentsContent = `
+    <div class="payments-content">
+        <h2>${t("payments")}</h2>
+    </div>
+`;
+const confidentialityContent = `
+    <div class="confidentiality-content">
+        <h2>${t("confidentiality")}</h2>
+    </div>
+`;
+const safetyContent = `
+    <div class="safety-content">
+        <h2>${t("safety")}</h2>
+    </div>
+`;
+
 function userProfileRender() {
     const content = document.querySelector(".content");
     //Kim login qilganini bilib olamiz
@@ -299,7 +329,7 @@ function userProfileRender() {
     content.innerHTML = `
     <div class="my-profile">
         <div class="my-profile-top">
-            <h2>My Profile</h2>
+            <h2>${t("my_profile")}</h2>
             <button class="setting-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -335,31 +365,31 @@ function userProfileRender() {
 
                 <div class="input-box">
                     <div class="input-group">
-                        <label>Mobile Number</label>
+                        <label>${t("mobile_number")}</label>
                         <input type="tel" id="prof-tel" class="profile-input input" value="${user.tel || ""}" disabled />
                     </div>
                     <div class="input-group">
-                        <label>User Name</label>
+                        <label>${t("user_name")}</label>
                         <input type="text" id="prof-username" class="profile-input input" value="${user.username || ""}" disabled />
                     </div>
                     <div class="input-group">
-                        <label>Email Address</label>
+                        <label>${t("email_address")}</label>
                         <input type="email" id="prof-email" class="profile-input input" value="${user.email || ""}" disabled />
                     </div>
                     <div class="input-group">
-                        <label>Password</label>
+                        <label>${t("password")}</label>
                         <input type="text" id="prof-password" class="profile-input input" value="${user.password || ""}" disabled />
                     </div>
                 </div>
 
-                <button id="save-btn" class="save-btn hidden">Save Changes</button>
+                <button id="save-btn" class="save-btn hidden">${t("save_changes")}</button>
             </div>
 
             <div class="user-info-right">
                 <div class="tabs">
-                    <button class="tab-btn active">Projects</button>
-                    <button class="tab-btn">Team</button>
-                    <button class="tab-btn">My vacations</button>
+                    <button class="tab-btn active">${t("project_btn")}</button>
+                    <button class="tab-btn">${t("team_btn")}</button>
+                    <button class="tab-btn">${t("vacations_btn")}</button>
                 </div>
                 <div class="tab-contents">
                 ${projectsHTML} </div>
@@ -405,12 +435,12 @@ function userProfileRender() {
         localStorage.setItem("currentUser", JSON.stringify(updatedUser));
         inputs.forEach((input) => (input.disabled = true));
         saveBtn.classList.add("saved");
-        saveBtn.innerHTML = `Saved`;
+        saveBtn.innerHTML = `${t("saved")}`;
 
         setTimeout(() => {
             saveBtn.classList.add("hidden");
-            saveBtn.classList.remove("saved");
-            saveBtn.innerHTML = `Save Changes`;
+            saveBtn.classList.remove(`${t("saved")}`);
+            saveBtn.innerHTML = `${t("save_changes")}`;
             window.location.reload();
         }, 1500);
     };
@@ -429,19 +459,27 @@ function userProfileRender() {
                 btn.classList.add("active");
                 const contentName = btn.innerText;
 
-                if (contentName === "Account") {
+                if (contentName === `${t("account")}`) {
                     userSettingsContent.innerHTML = accountContent;
-                } else if (contentName === "Notifications") {
+                } else if (contentName === `${t("notifications")}`) {
                     userSettingsContent.innerHTML = notificationsContent;
-                } else {
-                    userSettingsContent.innerHTML = `<h2>${contentName}</h2>`;
+                } else if (contentName === `${t("myCompany")}`) {
+                    userSettingsContent.innerHTML = myCompanyContent;
+                } else if (contentName === `${t("connectedApps")}`) {
+                    userSettingsContent.innerHTML = connectedAppsContent;
+                } else if (contentName === `${t("payments")}`) {
+                    userSettingsContent.innerHTML = paymentsContent;
+                } else if (contentName === `${t("confidentiality")}`) {
+                    userSettingsContent.innerHTML = confidentialityContent;
+                } else if (contentName === `${t("safety")}`) {
+                    userSettingsContent.innerHTML = safetyContent;
                 }
             };
         });
 
         if (backBtn) {
             backBtn.onclick = () => {
-                userProfileBtn.click();
+                userProfileRender();
             };
         }
 
@@ -457,9 +495,9 @@ function userProfileRender() {
 
             const text = btn.innerText;
 
-            if (text.includes("Projects")) tabContents.innerHTML = projectsHTML;
-            else if (text.includes("Team")) tabContents.innerHTML = teamHTML;
-            else if (text.includes("vacations")) tabContents.innerHTML = vacations;
+            if (text.includes(`${t("project_btn")}`)) tabContents.innerHTML = projectsHTML;
+            else if (text.includes(`${t("team_btn")}`)) tabContents.innerHTML = teamHTML;
+            else if (text.includes(`${t("vacations_btn")}`)) tabContents.innerHTML = vacations;
         };
     });
 }

@@ -1,5 +1,5 @@
 import { DashboardPage, initDashboardLogic } from "../../pages/Dashboard/dashboard.js";
-import { ProjectsPage } from "../../pages/Projects/projects.js";
+import { BusinessPage, initBusinessLogic } from "../../pages/Business/business.js";
 import { CalendarPage } from "../../pages/Calendar/calendar.js";
 import { VacationsPage } from "../../pages/Vacations/vacations.js";
 import { EmployeesPage, initEmployeesPage } from "../../pages/Employees/employees.js";
@@ -12,7 +12,7 @@ const savedPage = localStorage.getItem("currentPage") || "Tests";
 export const translations = {
     uz: {
         nav_tests: "Testlar",
-        nav_projects: "Loyihalar",
+        nav_business: "Biznes",
         nav_calendar: "Kalendar",
         nav_vacations: "Ta'tillar",
         nav_employees: "Xodimlar",
@@ -23,7 +23,7 @@ export const translations = {
     },
     en: {
         nav_tests: "Tests",
-        nav_projects: "Projects",
+        nav_business: "Business",
         nav_calendar: "Calendar",
         nav_vacations: "Vacations",
         nav_employees: "Employees",
@@ -34,7 +34,7 @@ export const translations = {
     },
     ru: {
         nav_tests: "Тесты",
-        nav_projects: "Проекты",
+        nav_business: "Бизнес",
         nav_calendar: "Календарь",
         nav_vacations: "Отпуска",
         nav_employees: "Сотрудники",
@@ -64,8 +64,8 @@ navigationWrapper.innerHTML = `
             </a>
         </li>
 
-        <li data-page="Projects" class="${savedPage === "Projects" ? "active" : ""}">
-            <a href="#projects">
+        <li data-page="Business" class="${savedPage === "Business" ? "active" : ""}">
+            <a href="#business">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         fill-rule="evenodd"
@@ -74,7 +74,7 @@ navigationWrapper.innerHTML = `
                         fill="currentColor"
                     />
                 </svg>
-                <span>${t("nav_projects")}</span>
+                <span>${t("nav_business")}</span>
             </a>
         </li>
 
@@ -159,16 +159,17 @@ navigationWrapper.innerHTML = `
         <a id="logout-btn" href="#">${t("nav_logout")}</a>
     </div>
 `;
-const contentArea = document.querySelector(".content");
 
+const contentArea = document.querySelector(".content");
 function renderPage(pageName) {
     console.log("Navigating to:", pageName);
 
     if (pageName === "Tests") {
         contentArea.innerHTML = DashboardPage();
         initDashboardLogic();
-    } else if (pageName === "Projects") {
-        contentArea.innerHTML = ProjectsPage;
+    } else if (pageName === "Business") {
+        contentArea.innerHTML = BusinessPage;
+        initBusinessLogic();
     } else if (pageName === "Calendar") {
         contentArea.innerHTML = CalendarPage;
     } else if (pageName === "Vacations") {

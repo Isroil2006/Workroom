@@ -6,3 +6,6 @@ import "./Dashboard/dashboard.js";
 
 // employees js
 import "./Employees/employees.js";
+
+// business js
+import "./Business/business.js";

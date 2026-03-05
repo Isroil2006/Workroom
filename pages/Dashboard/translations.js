@@ -12,6 +12,12 @@ export const translations = {
         new_test_btn: "Test yaratish",
         new_test_cancel: "Bekor qilish",
 
+        // delete test modal
+        delete_test: "Testni o'chirish",
+        delete_test_text: "testi va uning barcha savollari o'chiriladi.",
+        cancel_delete: "Bekor qilish",
+        delete: "O'chirish",
+
         // render detail view
         back_dash: "Qaytish",
         basic: "Asosiy",
@@ -24,6 +30,7 @@ export const translations = {
         save: "Saqlash",
         cancel: "Bekor qilish",
         add_question: "Savol qo'shish",
+        time_limit: "Berilgan vaqt",
         time_unlimited: "Cheklanmagan",
         time_limited: "Cheklangan",
         finish: "Testni yakunlash",
@@ -42,6 +49,25 @@ export const translations = {
         lider_board_title: "Top natijalar",
         active: "Faol",
         not_active: "Faol emas",
+        select_exam_language: "Test tilini tanlang",
+        start_now: "Testni boshlash",
+        test_ended: "Test yakunlandi",
+        total_score: "Jami balingiz",
+        correct: "To'g'ri",
+        wrong: "Notog'ri",
+        enter_test_question: "Savolni kiriting",
+        // renderQuiz
+        question: "Savol",
+        finish_test: "Testni yakunlash",
+        // renderResult
+        question: "Savol",
+        wrong_hint: "Noto'g'ri javob belgiladingiz",
+        analysis_question: "Savollar tahlili",
+        no_results_yet: "Hali natijalar yo'q",
+        // test finish modal
+        finish_test_modal: "Testni yakunlashni tasdiqlaysizmi?",
+        finish: "Yakunlash",
+        continue: "Davom etish",
     },
     en: {
         total_tests: "Total Tests",
@@ -56,6 +82,12 @@ export const translations = {
         new_test_btn: "Create test",
         new_test_cancel: "Cancel",
 
+        // delete test modal
+        delete_test: "Delete test",
+        delete_test_text: "The test and all its questions will be deleted.",
+        cancel_delete: "Cancel",
+        delete: "Delete",
+
         back_dash: "Back",
         questions: "Questions",
         question: "Question",
@@ -67,6 +99,7 @@ export const translations = {
         save: "Save",
         cancel: "Cancel",
         add_question: "Add question",
+        time_limit: "Time limit",
         time_unlimited: "Unlimited",
         time_limited: "Limited",
         finish: "Finish Test",
@@ -85,6 +118,25 @@ export const translations = {
         lider_board_title: "Leader board",
         active: "Active",
         not_active: "Not active",
+        select_exam_language: "Select exam language",
+        start_now: "Start now",
+        test_ended: "Test ended",
+        total_score: "total score",
+        correct: "Correct",
+        wrong: "Wrong",
+        enter_test_question: "Enter test question",
+        // renderQuiz
+        question: "Question",
+        finish_test: "Finish test",
+        // renderResult
+        question: "Question",
+        wrong_hint: "Wrong answer selected",
+        analysis_question: "Questions analysis",
+        no_results_yet: "No results yet",
+        // test finish modal
+        finish_test_modal: "Are you sure you want to finish the test?",
+        finish: "Finish",
+        continue: "Continue",
     },
     ru: {
         total_tests: "Всего тестов",
@@ -99,6 +151,12 @@ export const translations = {
         new_test_btn: "Создать тест",
         new_test_cancel: "Отменить",
 
+        // delete test modal
+        delete_test: "Удалить тест",
+        delete_test_text: "Тест и все его вопросы будут удалены.",
+        cancel_delete: "Отменить",
+        delete: "Удалить",
+
         back_dash: "Назад",
         questions: "Вопросы",
         question: "Вопрос",
@@ -110,6 +168,7 @@ export const translations = {
         save: "Сохранить",
         cancel: "Отменить",
         add_question: "Добавить вопрос",
+        time_limit: "Лимит времени",
         time_unlimited: "Без ограничений",
         time_limited: "Ограничено",
         finish: "Завершить тест",
@@ -128,5 +187,24 @@ export const translations = {
         lider_board_title: "Таблица лидеров",
         active: "Активный",
         not_active: "Неактивный",
+        select_exam_language: "Выберите язык экзамена",
+        start_now: "Начать тест",
+        test_ended: "Тест завершен",
+        total_score: "Общий балл",
+        correct: "Правильно",
+        wrong: "Неправильно",
+        enter_test_question: "Введите вопрос теста",
+        // renderQuiz
+        question: "Вопрос",
+        finish_test: "Завершить тест",
+        // renderResult
+        question: "Вопрос",
+        wrong_hint: "Выбран неправильный ответ",
+        analysis_question: "Анализ вопросов",
+        no_results_yet: "Нет результатов",
+        // test finish modal
+        finish_test_modal: "Вы уверены, что хотите завершить тест?",
+        finish: "Завершить",
+        continue: "Продолжить",
     },
 };

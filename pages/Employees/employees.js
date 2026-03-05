@@ -1,8 +1,12 @@
+import { translations } from "../Employees/translations.js";
+let currentLang = localStorage.getItem("language") || "uz";
+const t = (key) => translations[currentLang][key] || key;
+
 export const EmployeesPage = `
     <div class="employees-page">
         <div class="employees-header">
-            <h2 id="employee-count-title">Employees(0)</h2>
-            <button class="btn add-employee-btn">+ Add Employee</button>
+            <h2 id="employee-count-title">${t("employees")}(0)</h2>
+            <button class="btn add-employee-btn">${t("add_employees")}</button>
         </div>
 
         <div id="employees-list"></div>
@@ -12,36 +16,36 @@ export const EmployeesPage = `
 
     <div class="modal" id="employeeModal" style="display:none;">
         <div class="modal-content">
-            <h3 id="modalTitle">Add Employee</h3>
+            <h3 id="modalTitle">${t("add_employees")}</h3>
             
             <div class="avatar-upload-wrapper">
                 <div class="avatar-preview">
                     <img id="modal-avatar-img" src="./assets/images/User-avatar.png" alt="Preview" />
                 </div>
-                <label for="avatar-input" class="upload-label">Change Photo</label>
+                <label for="avatar-input" class="upload-label">${t("change_photo")}</label>
                 <input type="file" id="avatar-input" accept="image/*" style="display:none;" />
             </div>
 
             <div class="modal-body">
-                <input class="input" id="emp-username" placeholder="Full Name" />
-                <input class="input" id="emp-email" placeholder="Email Address" />
-                <input class="input" id="emp-password" placeholder="Password" />
-                <input class="input" id="emp-tel" placeholder="Phone Number" />
+                <input class="input" id="emp-username" placeholder="${t("full_name")}" />
+                <input class="input" id="emp-email" placeholder="${t("email_address")}" />
+                <input class="input" id="emp-password" placeholder="${t("password")}" />
+                <input class="input" id="emp-tel" placeholder="${t("phone_number")}" />
                 
                 <select id="emp-gender">
-                    <option value="" disabled selected>Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="" disabled selected>${t("select_gander")}</option>
+                    <option value="Male">${t("male")}</option>
+                    <option value="Female">${t("famale")}</option>
                 </select>
 
-                <input class="input" id="emp-age" type="number" placeholder="Age" />
-                <input class="input" id="emp-position" placeholder="Job Position" />
-                <input class="input" id="emp-level" placeholder="Level (Junior, Middle, Senior)" />
+                <input class="input" id="emp-age" type="number" placeholder="${t("age")}" />
+                <input class="input" id="emp-position" placeholder="${t("job_position")}" />
+                <input class="input" id="emp-level" placeholder="${t("level")}" />
             </div>
 
             <div class="modal-actions">
-                <button id="cancelModal" class="btn-cancel">Cancel</button>
-                <button id="saveEmployee" class="btn-save">Save</button>
+                <button id="cancelModal" class="btn-cancel">${t("cancel")}</button>
+                <button id="saveEmployee" class="btn-save">${t("save")}</button>
             </div>
         </div>
     </div>
@@ -109,7 +113,7 @@ export function initEmployeesPage() {
     function renderEmployees() {
         let users = JSON.parse(localStorage.getItem("users")) || [];
         list.innerHTML = "";
-        employeeCountTitle.innerText = `Employees(${users.length})`;
+        employeeCountTitle.innerText = `${t("employees")}(${users.length})`;
 
         const start = (currentPageNum - 1) * ITEMS_PER_PAGE;
         const pageUsers = users.slice(start, start + ITEMS_PER_PAGE);
@@ -134,15 +138,15 @@ export function initEmployeesPage() {
 
                 <div class="user-main-info">
                     <div class="gender-box">
-                        <span class="user-gender-title">Gender</span>
+                        <span class="user-gender-title">${t("gender")}</span>
                         <span class="user-gender">${u.gender || "-"}</span>
                     </div>
                     <div class="user-age-box">
-                        <span class="user-age-title">Age</span>
+                        <span class="user-age-title">${t("age")}</span>
                         <span class="user-age">${u.age || "-"}</span>
                     </div>
                     <div class="user-position-box">
-                        <span class="user-position-title">Position</span>
+                        <span class="user-position-title">${t("position")}</span>
                         <span class="user-position">${u.position || "-"}</span>
                     </div>
                         
@@ -153,8 +157,8 @@ export function initEmployeesPage() {
                             </svg>
                         </button>
                         <div class="dots-menu">
-                            <div class="menu-item edit" data-idx="${realIndex}">Edit</div>
-                            <div class="menu-item delete" data-idx="${realIndex}">Delete</div>
+                            <div class="menu-item edit" data-idx="${realIndex}">${t("edit")}</div>
+                            <div class="menu-item delete" data-idx="${realIndex}">${t("delete")}</div>
                         </div>
                     </div>
                 </div>
@@ -202,7 +206,7 @@ export function initEmployeesPage() {
         let users = JSON.parse(localStorage.getItem("users")) || [];
         const u = users[index];
         editIndex = index;
-        modalTitle.innerText = "Edit Employee";
+        modalTitle.innerText = `${t("edit_employees")}`;
 
         usernameInput.value = u.username || "";
         emailInput.value = u.email || "";
@@ -221,7 +225,11 @@ export function initEmployeesPage() {
 
     saveBtn.onclick = () => {
         let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const existing = editIndex !== null ? users[editIndex] : {};
+
         const data = {
+            ...existing,
             username: usernameInput.value,
             email: emailInput.value,
             tel: telInput.value,
@@ -238,6 +246,14 @@ export function initEmployeesPage() {
         else users.push(data);
 
         localStorage.setItem("users", JSON.stringify(users));
+
+        // ✅ Agar edit qilingan user joriy login qilgan user bo'lsa,
+        // currentUser ni ham yangilaymiz (lekin results/totalScore saqlanadi)
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+        if (currentUser && existing.email === currentUser.email) {
+            localStorage.setItem("currentUser", JSON.stringify(data));
+        }
+
         modal.style.display = "none";
         renderEmployees();
         window.location.reload();
@@ -249,7 +265,7 @@ export function initEmployeesPage() {
 
     addBtn.onclick = () => {
         editIndex = null;
-        modalTitle.innerText = "Add Employee";
+        modalTitle.innerText = `${t("add_employees")}`;
         [usernameInput, emailInput, telInput, ageInput, positionInput, levelInput].forEach((i) => (i.value = ""));
         genderInput.value = "";
         currentImage = "./assets/images/User-avatar.png";
