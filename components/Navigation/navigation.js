@@ -1,6 +1,6 @@
 import { DashboardPage, initDashboardLogic } from "../../pages/Dashboard/dashboard.js";
 import { BusinessPage, initBusinessLogic } from "../../pages/Business/business.js";
-import { CalendarPage } from "../../pages/Calendar/calendar.js";
+import { TodoPage, initTodoLogic } from "../../pages/Tasks/tasks.js";
 import { VacationsPage } from "../../pages/Vacations/vacations.js";
 import { EmployeesPage, initEmployeesPage } from "../../pages/Employees/employees.js";
 import { MassangerPage } from "../../pages/Messenger/messenger.js";
@@ -12,8 +12,8 @@ const savedPage = localStorage.getItem("currentPage") || "Tests";
 export const translations = {
     uz: {
         nav_tests: "Testlar",
-        nav_business: "Biznes",
-        nav_calendar: "Kalendar",
+        nav_business: "To'lo'vlar",
+        nav_calendar: "Vazifalar",
         nav_vacations: "Ta'tillar",
         nav_employees: "Xodimlar",
         nav_messenger: "Messenger",
@@ -23,8 +23,8 @@ export const translations = {
     },
     en: {
         nav_tests: "Tests",
-        nav_business: "Business",
-        nav_calendar: "Calendar",
+        nav_business: "Payments",
+        nav_calendar: "Tasks",
         nav_vacations: "Vacations",
         nav_employees: "Employees",
         nav_messenger: "Messenger",
@@ -34,8 +34,8 @@ export const translations = {
     },
     ru: {
         nav_tests: "Тесты",
-        nav_business: "Бизнес",
-        nav_calendar: "Календарь",
+        nav_business: "Платежи",
+        nav_calendar: "Задачи",
         nav_vacations: "Отпуска",
         nav_employees: "Сотрудники",
         nav_messenger: "Мессенджер",
@@ -64,7 +64,7 @@ navigationWrapper.innerHTML = `
             </a>
         </li>
 
-        <li data-page="Business" class="${savedPage === "Business" ? "active" : ""}">
+        <li data-page="Payments" class="${savedPage === "Payments" ? "active" : ""}">
             <a href="#business">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -78,7 +78,7 @@ navigationWrapper.innerHTML = `
             </a>
         </li>
 
-        <li data-page="Calendar" class="${savedPage === "Calendar" ? "active" : ""}">
+        <li data-page="Tasks" class="${savedPage === "Tasks" ? "active" : ""}">
             <a href="#calendar">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -167,11 +167,12 @@ function renderPage(pageName) {
     if (pageName === "Tests") {
         contentArea.innerHTML = DashboardPage();
         initDashboardLogic();
-    } else if (pageName === "Business") {
+    } else if (pageName === "Payments") {
         contentArea.innerHTML = BusinessPage;
         initBusinessLogic();
-    } else if (pageName === "Calendar") {
-        contentArea.innerHTML = CalendarPage;
+    } else if (pageName === "Tasks") {
+        contentArea.innerHTML = TodoPage;
+        initTodoLogic();
     } else if (pageName === "Vacations") {
         contentArea.innerHTML = VacationsPage;
     } else if (pageName === "Employees") {

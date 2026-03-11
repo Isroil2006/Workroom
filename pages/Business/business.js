@@ -7,7 +7,6 @@ const getCurrent = () => JSON.parse(localStorage.getItem("currentUser"));
 let currentLang = localStorage.getItem("language") || "uz";
 const t = (key) => translations[currentLang]?.[key] ?? key;
 
-// Til o'zgarganda bu funksiyani chaqiring
 export const setBusinessLang = (lang) => {
     currentLang = lang;
 };
@@ -45,12 +44,10 @@ const avatarHTML = (user, size = 34) => {
     return `<div class="biz-avatar" style="background:${avatarColor(name)};width:${size}px;height:${size}px;font-size:${Math.round(size * 0.35)}px">${initials(name)}</div>`;
 };
 
-// ─── HTML ─────────────────────────────────────────────────────
 export const BusinessPage = `
 <div class="biz-container">
 <div class="biz-root">
 
-  <!-- HEADER -->
   <div class="biz-header">
     <div>
       <p class="biz-greeting">${t("hi")} <span id="biz-username">User</span>,</p>
@@ -58,7 +55,6 @@ export const BusinessPage = `
     </div>
   </div>
 
-  <!-- STATS -->
   <div class="biz-stats-row">
     <div class="biz-stat-card">
       <div class="biz-stat-icon waiting-icon">
@@ -89,7 +85,6 @@ export const BusinessPage = `
     </div>
   </div>
 
-  <!-- ═══ DASHBOARD VIEW ═══ -->
   <div id="view-dashboard">
     <div class="biz-card">
       <div class="biz-card-head">
@@ -107,7 +102,6 @@ export const BusinessPage = `
     </div>
   </div>
 
-  <!-- ═══ USERS FULL VIEW ═══ -->
   <div id="view-clients" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
     <div class="biz-card" style="height:100%;display:flex;flex-direction:column;">
       <div class="biz-card-head">
@@ -136,7 +130,6 @@ export const BusinessPage = `
     </div>
   </div>
 
-  <!-- ═══ DOCUMENTS FULL VIEW ═══ -->
   <div id="view-docs" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
     <div class="biz-card" style="height:100%;display:flex;flex-direction:column;">
       <div class="biz-card-head">
@@ -238,6 +231,29 @@ export const BusinessPage = `
       <button class="biz-btn-primary" id="d-proceed" style="width:100%">${t("proceed")}</button>
       <p class="biz-error" id="d-error"></p>
     </div>
+
+    <!-- ══ SMS VERIFY STEP ══ -->
+    <div id="drawer-sms" style="display:none;flex-direction:column;align-items:center;gap:20px;padding:40px 0 20px">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#5b6ef5,#7c3aed);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(91,110,245,.35)">
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.06 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="text-align:center">
+        <h3 id="sms-title" style="margin:0 0 6px;font-size:18px;font-weight:800;color:#1a1d2e"></h3>
+        <p id="sms-desc" style="margin:0;font-size:13px;color:#8892a4;line-height:1.5"></p>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <input id="sms-d1" class="biz-otp-input" maxlength="1" inputmode="numeric" type="text" />
+        <input id="sms-d2" class="biz-otp-input" maxlength="1" inputmode="numeric" type="text" />
+        <input id="sms-d3" class="biz-otp-input" maxlength="1" inputmode="numeric" type="text" />
+        <input id="sms-d4" class="biz-otp-input" maxlength="1" inputmode="numeric" type="text" />
+      </div>
+      <p id="sms-error" style="color:#ef4444;font-size:12px;min-height:16px;margin:0"></p>
+      <button class="biz-btn-primary" id="sms-confirm-btn" style="width:100%"></button>
+      <button class="biz-link-btn" id="sms-back-btn" style="font-size:13px;color:#8892a4"></button>
+    </div>
+
     <div id="drawer-success" style="display:none;text-align:center;padding:60px 20px">
       <svg width="64" height="64" fill="none" viewBox="0 0 24 24" style="display:block;margin:0 auto 16px">
         <circle cx="12" cy="12" r="11" stroke="#22c55e" stroke-width="1.5"/>
@@ -299,11 +315,9 @@ export const BusinessPage = `
 </div>
 `;
 
-// ─── helpers ──────────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);
 const PAGE = 5;
 
-// ─── STATS ────────────────────────────────────────────────────
 const refreshStats = (me) => {
     const payments = me?.payments || [];
     const waiting = payments.filter((p) => p.status === "waiting" && !p.isIncoming).reduce((s, p) => s + Number(p.amount), 0);
@@ -320,12 +334,10 @@ const refreshStats = (me) => {
     if ($("drawer-my-balance")) $("drawer-my-balance").textContent = fmt(balance);
 };
 
-// ─── Accounts ─────────────────────────────────────────────────
 const renderAccounts = (me) => {
     const el = $("accounts-list");
     if (!el) return;
     const methods = me?.paymentMethods || [];
-
     el.innerHTML = methods.length
         ? methods
               .map((m, i) => {
@@ -352,18 +364,14 @@ const renderAccounts = (me) => {
     el.querySelectorAll(".biz-acc-del").forEach((btn) => {
         btn.onclick = () => {
             const idx = +btn.dataset.mi;
-            // modal matnlarini til bilan to'ldirish
             $("del-card-title").textContent = t("delete_card_title");
             $("del-card-desc").textContent = t("delete_card_desc");
             $("del-card-cancel").textContent = t("cancel");
             $("del-card-confirm").textContent = t("delete_confirm_btn");
             $("del-card-modal").style.display = "flex";
-
-            // faqat bir marta ishlashi uchun clone
             const confirmBtn = $("del-card-confirm");
             const newConfirm = confirmBtn.cloneNode(true);
             confirmBtn.parentNode.replaceChild(newConfirm, confirmBtn);
-
             newConfirm.onclick = () => {
                 $("del-card-modal").style.display = "none";
                 const us = getUsers();
@@ -380,7 +388,6 @@ const renderAccounts = (me) => {
     });
 };
 
-// ─── USERS MINI ───────────────────────────────────────────────
 const renderClientsMini = (me) => {
     const el = $("clients-mini");
     if (!el) return;
@@ -407,7 +414,6 @@ const renderClientsMini = (me) => {
         : `<p class="biz-empty">${t("no_users_yet")}</p>`;
 };
 
-// ─── DOCUMENTS MINI ───────────────────────────────────────────
 const renderDocsMini = (me) => {
     const el = $("docs-mini");
     if (!el) return;
@@ -438,19 +444,16 @@ const renderDocsMini = (me) => {
         : `<p class="biz-empty">${t("no_docs_yet")}</p>`;
 };
 
-// ─── USERS FULL LIST ──────────────────────────────────────────
 let cPage = 1,
     cFiltered = [];
 const renderClientsFull = (me, query = "") => {
     const allUsers = getUsers().filter((u) => u.username !== me?.username);
     cFiltered = query ? allUsers.filter((u) => u.username?.toLowerCase().includes(query.toLowerCase()) || u.email?.toLowerCase().includes(query.toLowerCase()) || u.tel?.includes(query)) : [...allUsers];
-
     const total = cFiltered.length;
     const pages = Math.max(1, Math.ceil(total / PAGE));
     if (cPage > pages) cPage = pages;
     const start = (cPage - 1) * PAGE,
         slice = cFiltered.slice(start, start + PAGE);
-
     const el = $("clients-full-list");
     if (!el) return;
     el.innerHTML = slice.length
@@ -476,12 +479,10 @@ const renderClientsFull = (me, query = "") => {
               })
               .join("")
         : `<p class="biz-empty">${t("no_users_found")}</p>`;
-
     if ($("cp-info")) $("cp-info").textContent = `${total === 0 ? 0 : start + 1}–${Math.min(start + PAGE, total)} ${t("of")} ${total}`;
     if ($("cp-num")) $("cp-num").textContent = cPage;
 };
 
-// ─── DOCS FULL ────────────────────────────────────────────────
 let dPage = 1,
     dFiltered = [];
 const renderDocsFull = (me, statusF = "", numF = "") => {
@@ -491,13 +492,11 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
         const matchN = !numF || (p.docNumber || "").toLowerCase().includes(numF.toLowerCase()) || (p.desc || "").toLowerCase().includes(numF.toLowerCase());
         return matchS && matchN;
     });
-
     const total = dFiltered.length;
     const pages = Math.max(1, Math.ceil(total / PAGE));
     if (dPage > pages) dPage = pages;
     const start = (dPage - 1) * PAGE,
         slice = dFiltered.slice(start, start + PAGE);
-
     const el = $("docs-full-list");
     if (!el) return;
     el.innerHTML = slice.length
@@ -510,13 +509,10 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
                   const recipUser = allUsers.find((u) => u.username === p.recipientName);
                   const badgeClass = isIn ? "biz-badge-incoming" : isWait ? "biz-badge-pending" : "biz-badge-confirmed";
                   const badgeText = isIn ? t("badge_incoming") : isWait ? t("badge_pending") : t("badge_confirmed");
-
                   return `
             <div class="biz-doc-row-wrap${p._expanded ? " expanded" : ""}">
               <div class="biz-row docs-cols">
-                <div class="biz-desc-cell">
-                  <span class="${badgeClass}">${badgeText}</span>
-                </div>
+                <div class="biz-desc-cell"><span class="${badgeClass}">${badgeText}</span></div>
                 <div class="biz-user-cell">
                   ${recipUser ? avatarHTML(recipUser, 28) : `<div class="biz-avatar" style="background:${avatarColor(p.recipientName || "")};width:28px;height:28px;font-size:11px">${initials(p.recipientName || "?")}</div>`}
                   <span class="biz-small">${p.recipientName || "—"}</span>
@@ -539,7 +535,6 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
                   }
                 </div>
               </div>
-
               ${
                   p._expanded
                       ? `
@@ -584,9 +579,7 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
                     m.payments.forEach((p) => {
                         p._expanded = false;
                     });
-                    if (!isCurrentlyOpen && m.payments[clickedIdx]) {
-                        m.payments[clickedIdx]._expanded = true;
-                    }
+                    if (!isCurrentlyOpen && m.payments[clickedIdx]) m.payments[clickedIdx]._expanded = true;
                     saveUsers(us);
                 }
                 renderDocsFull(syncMe(), statusF, numF);
@@ -620,7 +613,6 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
     );
 };
 
-// ─── VIEW SWITCHER ────────────────────────────────────────────
 const showView = (name) => {
     const dashboard = $("view-dashboard");
     const clients = $("view-clients");
@@ -629,7 +621,6 @@ const showView = (name) => {
     const bizRoot = document.querySelector(".biz-root");
     const statsRow = document.querySelector(".biz-stats-row");
     const header = document.querySelector(".biz-header");
-
     if (name === "view-dashboard") {
         dashboard.style.display = "";
         clients.style.display = "none";
@@ -657,25 +648,22 @@ const showView = (name) => {
     }
 };
 
-// ─── SEND DRAWER ──────────────────────────────────────────────
 let activePIdx = null,
-    selRecipMethodIdx = null;
+    selRecipMethodIdx = null,
+    pendingPayment = null;
 
 const openSendDrawer = (me, pIdx) => {
     activePIdx = pIdx;
     selRecipMethodIdx = null;
     const payment = me?.payments?.[pIdx];
     if (!payment) return;
-
     const totalBal = (me?.paymentMethods || []).reduce((s, m) => s + Number(m.balance || 0), 0);
     $("drawer-my-balance").textContent = fmt(totalBal);
     $("d-amount").value = payment.amount || "";
     $("d-desc").value = payment.desc || "";
     $("d-beneficiary").value = payment.recipientName || "";
     $("d-error").textContent = "";
-
     renderMyMethods(me);
-
     const users = getUsers();
     $("d-recipient").innerHTML =
         `<option value="">${t("select_user")}</option>` +
@@ -683,16 +671,14 @@ const openSendDrawer = (me, pIdx) => {
             .filter((u) => u.username !== me.username)
             .map((u) => `<option value="${u.username}" ${u.username === payment.recipientName ? "selected" : ""}>${u.username} (${u.tel || u.email || ""})</option>`)
             .join("");
-
     if (payment.recipientName) {
         const rec = users.find((u) => u.username === payment.recipientName);
         if (rec) renderRecipMethods(rec, payment.recipientMethodIdx ?? null);
     }
-
     $("drawer-form").style.display = "flex";
     $("drawer-success").style.display = "none";
+    $("drawer-sms").style.display = "none";
     $("send-drawer-overlay").style.display = "flex";
-
     $("d-recipient").onchange = () => {
         const rec = users.find((u) => u.username === $("d-recipient").value);
         $("d-beneficiary").value = rec?.username || "";
@@ -748,7 +734,6 @@ const renderRecipMethods = (rec, selIdx) => {
               )
               .join("")
         : `<p style="color:#8892a4;font-size:13px">${t("no_type_methods")}</p>`;
-
     $("recipient-methods-list")
         .querySelectorAll('input[name="rec-method"]')
         .forEach((inp) => {
@@ -763,16 +748,85 @@ const renderRecipMethods = (rec, selIdx) => {
         });
 };
 
-const closeSendDrawer = () => {
-    $("send-drawer-overlay").style.display = "none";
-    activePIdx = null;
-    selRecipMethodIdx = null;
+// ─── SMS VERIFICATION ─────────────────────────────────────────
+const showSmsStep = (me) => {
+    const phone = me?.tel || me?.phone || me?.email || "***";
+    const masked = phone.length > 4 ? phone.slice(0, -4).replace(/./g, "*") + phone.slice(-4) : "****";
+    $("sms-title").textContent = t("sms_title") || "SMS tasdiqlash";
+    $("sms-desc").textContent = (t("sms_desc") || "Raqamingizga SMS yuborildi:") + " " + masked;
+    $("sms-confirm-btn").textContent = t("sms_confirm") || "Tasdiqlash";
+    $("sms-back-btn").textContent = t("cancel") || "Bekor qilish";
+    $("sms-error").textContent = "";
+    ["sms-d1", "sms-d2", "sms-d3", "sms-d4"].forEach((id) => {
+        $(id).value = "";
+        $(id).style.borderColor = "";
+    });
+    $("drawer-form").style.display = "none";
+    $("drawer-sms").style.display = "flex";
+    setTimeout(() => $("sms-d1").focus(), 100);
+
+    const inputs = ["sms-d1", "sms-d2", "sms-d3", "sms-d4"].map((id) => $(id));
+    inputs.forEach((inp, i) => {
+        inp.oninput = () => {
+            inp.value = inp.value.replace(/\D/, "");
+            if (inp.value && i < 3) inputs[i + 1].focus();
+        };
+        inp.onkeydown = (e) => {
+            if (e.key === "Backspace" && !inp.value && i > 0) inputs[i - 1].focus();
+        };
+    });
 };
 
-// ─── MAIN INIT ────────────────────────────────────────────────
+const applyPendingPayment = (me) => {
+    const { amount, recipUser, desc, myMethodIdx } = pendingPayment;
+    const us = getUsers();
+    const myUser = us.find((u) => u.username === me.username);
+    const senderMethod = myUser?.paymentMethods?.[myMethodIdx];
+    senderMethod.balance = Number(senderMethod.balance) - amount;
+    const recUser = us.find((u) => u.username === recipUser);
+    recUser.paymentMethods[selRecipMethodIdx].balance = Number(recUser.paymentMethods[selRecipMethodIdx].balance) + amount;
+    if (!recUser.payments) recUser.payments = [];
+    recUser.payments.push({
+        docNumber: `INCOME/${Date.now()}`,
+        desc: desc || `Transfer from ${me.username}`,
+        amount,
+        recipientName: me.username,
+        status: "paid",
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        createDate: new Date().toLocaleDateString(),
+        createTime: new Date().toLocaleTimeString(),
+        method: recUser.paymentMethods[selRecipMethodIdx].type,
+        isIncoming: true,
+    });
+    if (activePIdx !== null && myUser?.payments?.[activePIdx]) {
+        const p = myUser.payments[activePIdx];
+        p.status = "paid";
+        p.amount = amount;
+        p.desc = desc || p.desc;
+        p.date = new Date().toLocaleDateString();
+        p.time = new Date().toLocaleTimeString();
+        p.method = senderMethod.type;
+        p.recipientName = recipUser;
+        p.recipientMethodIdx = selRecipMethodIdx;
+    }
+    saveUsers(us);
+    localStorage.setItem("currentUser", JSON.stringify(us.find((u) => u.username === me.username)));
+    pendingPayment = null;
+};
+
+const closeSendDrawer = () => {
+    $("send-drawer-overlay").style.display = "none";
+    $("drawer-sms").style.display = "none";
+    $("drawer-form").style.display = "flex";
+    $("drawer-success").style.display = "none";
+    activePIdx = null;
+    selRecipMethodIdx = null;
+    pendingPayment = null;
+};
+
 export const initBusinessLogic = () => {
     let me = syncMe();
-
     refreshStats(me);
     renderAccounts(me);
     renderClientsMini(me);
@@ -787,7 +841,6 @@ export const initBusinessLogic = () => {
         showView("view-dashboard");
         renderClientsMini(syncMe());
     });
-
     $("btn-view-docs")?.addEventListener("click", () => {
         showView("view-docs");
         dPage = 1;
@@ -797,7 +850,6 @@ export const initBusinessLogic = () => {
         showView("view-dashboard");
         renderDocsMini(syncMe());
     });
-
     $("cp-prev")?.addEventListener("click", () => {
         if (cPage > 1) {
             cPage--;
@@ -811,12 +863,10 @@ export const initBusinessLogic = () => {
             renderClientsFull(syncMe());
         }
     });
-
     $("biz-search-input")?.addEventListener("input", (e) => {
         cPage = 1;
         renderClientsFull(syncMe(), e.target.value);
     });
-
     $("doc-status-filter")?.addEventListener("change", (e) => {
         dPage = 1;
         renderDocsFull(syncMe(), e.target.value, $("doc-num-search")?.value || "");
@@ -825,7 +875,6 @@ export const initBusinessLogic = () => {
         dPage = 1;
         renderDocsFull(syncMe(), $("doc-status-filter")?.value || "", e.target.value);
     });
-
     $("dp-prev")?.addEventListener("click", () => {
         if (dPage > 1) {
             dPage--;
@@ -840,7 +889,6 @@ export const initBusinessLogic = () => {
         }
     });
 
-    // ── create document ──
     $("create-doc-btn")?.addEventListener("click", () => {
         const users = getUsers();
         $("dm-recipient").innerHTML =
@@ -862,7 +910,6 @@ export const initBusinessLogic = () => {
         const rec = $("dm-recipient").value;
         if (isNaN(amount) || amount <= 0) return alert(t("alert_enter_amount"));
         if (!rec) return alert(t("alert_select_recipient"));
-
         const now = new Date();
         const us = getUsers();
         const m = us.find((u) => u.username === me.username);
@@ -887,12 +934,12 @@ export const initBusinessLogic = () => {
         refreshStats(me);
     });
 
-    // ── send drawer ──
     $("drawer-back")?.addEventListener("click", closeSendDrawer);
     $("drawer-close")?.addEventListener("click", closeSendDrawer);
     $("send-drawer-overlay")?.addEventListener("click", (e) => {
         if (e.target === e.currentTarget) closeSendDrawer();
     });
+
     $("d-return")?.addEventListener("click", () => {
         closeSendDrawer();
         me = syncMe();
@@ -903,9 +950,7 @@ export const initBusinessLogic = () => {
     });
 
     document.querySelectorAll('input[name="pay-type"]').forEach((inp) => {
-        inp.onchange = () => {
-            renderMyMethods(syncMe());
-        };
+        inp.onchange = () => renderMyMethods(syncMe());
     });
 
     $("d-proceed")?.addEventListener("click", () => {
@@ -915,7 +960,6 @@ export const initBusinessLogic = () => {
         const recipUser = $("d-recipient").value;
         const desc = $("d-desc").value;
         const myMethodIdx = parseInt(document.querySelector('input[name="my-method"]:checked')?.value ?? "x");
-
         if (isNaN(amount) || amount <= 0) {
             errEl.textContent = t("err_valid_amount");
             return;
@@ -932,11 +976,9 @@ export const initBusinessLogic = () => {
             errEl.textContent = t("err_select_rec_method");
             return;
         }
-
         const us = getUsers();
         const myUser = us.find((u) => u.username === me.username);
         const senderMethod = myUser?.paymentMethods?.[myMethodIdx];
-
         if (!senderMethod) {
             errEl.textContent = t("err_invalid_sender");
             return;
@@ -945,74 +987,47 @@ export const initBusinessLogic = () => {
             errEl.textContent = t("err_insufficient");
             return;
         }
-
-        senderMethod.balance = Number(senderMethod.balance) - amount;
-
         const recUser = us.find((u) => u.username === recipUser);
         if (!recUser?.paymentMethods?.[selRecipMethodIdx]) {
             errEl.textContent = t("err_rec_not_found");
             return;
         }
-        recUser.paymentMethods[selRecipMethodIdx].balance = Number(recUser.paymentMethods[selRecipMethodIdx].balance) + amount;
 
-        if (!recUser.payments) recUser.payments = [];
-        recUser.payments.push({
-            docNumber: `INCOME/${Date.now()}`,
-            desc: desc || `Transfer from ${me.username}`,
-            amount,
-            recipientName: me.username,
-            status: "paid",
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString(),
-            createDate: new Date().toLocaleDateString(),
-            createTime: new Date().toLocaleTimeString(),
-            method: recUser.paymentMethods[selRecipMethodIdx].type,
-            isIncoming: true,
-        });
+        // Validatsiya o'tdi — SMS stepga o'tamiz
+        pendingPayment = { amount, recipUser, desc, myMethodIdx };
+        showSmsStep(me);
+    });
 
-        if (activePIdx !== null && myUser?.payments?.[activePIdx]) {
-            const p = myUser.payments[activePIdx];
-            p.status = "paid";
-            p.amount = amount;
-            p.desc = desc || p.desc;
-            p.date = new Date().toLocaleDateString();
-            p.time = new Date().toLocaleTimeString();
-            p.method = senderMethod.type;
-            p.recipientName = recipUser;
-            p.recipientMethodIdx = selRecipMethodIdx;
+    // ── SMS step listeners ──
+    $("sms-back-btn")?.addEventListener("click", () => {
+        $("drawer-sms").style.display = "none";
+        $("drawer-form").style.display = "flex";
+        pendingPayment = null;
+    });
+    $("sms-confirm-btn")?.addEventListener("click", () => {
+        const code = ["sms-d1", "sms-d2", "sms-d3", "sms-d4"].map((id) => $(id).value).join("");
+        if (code !== "1234") {
+            $("sms-error").textContent = t("sms_wrong_code") || "Kod noto'g'ri. 1234 kiriting.";
+            ["sms-d1", "sms-d2", "sms-d3", "sms-d4"].forEach((id) => ($(id).style.borderColor = "#ef4444"));
+            return;
         }
-
-        saveUsers(us);
-        localStorage.setItem("currentUser", JSON.stringify(us.find((u) => u.username === me.username)));
+        applyPendingPayment(me);
         me = syncMe();
-
-        $("drawer-form").style.display = "none";
+        $("drawer-sms").style.display = "none";
         $("drawer-success").style.display = "block";
     });
 
-    // ── add card modal ──
     $("add-card-btn")?.addEventListener("click", () => {
         ["cm-number", "cm-holder", "cm-expiry", "cm-balance"].forEach((id) => ($(id).value = ""));
         $("card-modal").style.display = "flex";
     });
-
-    // ── Card number: har 4 raqamdan keyin bo'sh joy ──
     $("cm-number")?.addEventListener("input", (e) => {
-        const input = e.target;
-        const raw = input.value.replace(/\D/g, "").slice(0, 16);
-        const formatted = raw.match(/.{1,4}/g)?.join(" ") || raw;
-        input.value = formatted;
+        const raw = e.target.value.replace(/\D/g, "").slice(0, 16);
+        e.target.value = raw.match(/.{1,4}/g)?.join(" ") || raw;
     });
-
-    // ── Expiry: 2 raqamdan keyin / avtomatik ──
     $("cm-expiry")?.addEventListener("input", (e) => {
-        const input = e.target;
-        const raw = input.value.replace(/\D/g, "").slice(0, 4);
-        if (raw.length >= 3) {
-            input.value = raw.slice(0, 2) + "/" + raw.slice(2);
-        } else {
-            input.value = raw;
-        }
+        const raw = e.target.value.replace(/\D/g, "").slice(0, 4);
+        e.target.value = raw.length >= 3 ? raw.slice(0, 2) + "/" + raw.slice(2) : raw;
     });
     $("cm-cancel")?.addEventListener("click", () => ($("card-modal").style.display = "none"));
     $("del-card-cancel")?.addEventListener("click", () => ($("del-card-modal").style.display = "none"));
