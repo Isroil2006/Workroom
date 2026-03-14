@@ -3,7 +3,7 @@ import { BusinessPage, initBusinessLogic } from "../../pages/Business/business.j
 import { TodoPage, initTodoLogic } from "../../pages/Tasks/tasks.js";
 import { VacationsPage } from "../../pages/Vacations/vacations.js";
 import { EmployeesPage, initEmployeesPage } from "../../pages/Employees/employees.js";
-import { MassangerPage } from "../../pages/Messenger/messenger.js";
+import { MassangerPage, initMessengerLogic } from "../../pages/Messenger/messenger.js";
 import { infoportalPage } from "../../pages/InfoPortal/infoportal.js";
 
 const navigationWrapper = document.querySelector(".navigation-wrapper");
@@ -180,7 +180,8 @@ function renderPage(pageName) {
         initEmployeesPage();
     } else if (pageName === "Messenger") {
         contentArea.innerHTML = MassangerPage;
-    } else if (pageName === "InfoPortal") {
+        initMessengerLogic();
+    } else if (pageName === "Infoportal") {
         contentArea.innerHTML = infoportalPage;
     }
 
