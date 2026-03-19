@@ -1,3 +1,4 @@
+import { createTaskAnalyticsBtn, initTaskAnalytics } from "./analytics.js";
 import { translations } from "./trasnslations.js";
 
 let currentLang = localStorage.getItem("language") || "uz";
@@ -983,6 +984,9 @@ export const initTodoLogic = () => {
     currentLang = localStorage.getItem("language") || "uz";
     translateUI();
 
+    const hr = document.querySelector(".todo-header-right");
+    if (hr) hr.insertAdjacentHTML("afterbegin", createTaskAnalyticsBtn(currentLang));
+
     // NO default sample data — bo'sh boshlanadi
     if (getProjects().length === 0) {
         // faqat bo'sh holat, sample data yo'q
@@ -1106,4 +1110,6 @@ export const initTodoLogic = () => {
     $("todo-del-modal")?.addEventListener("click", (e) => {
         if (e.target === e.currentTarget) e.currentTarget.style.display = "none";
     });
+
+    initTaskAnalytics(currentLang);
 };

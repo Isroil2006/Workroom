@@ -1,3 +1,4 @@
+import { createPayAnalyticsBtn, initPayAnalytics } from "./analytics.js";
 import { translations } from "./translations.js";
 
 const getUsers = () => JSON.parse(localStorage.getItem("users")) || [];
@@ -826,6 +827,10 @@ const closeSendDrawer = () => {
 };
 
 export const initBusinessLogic = () => {
+    // initBusinessLogic() boshiga:
+    const header = document.querySelector(".biz-header");
+    if (header) header.insertAdjacentHTML("beforeend", createPayAnalyticsBtn(currentLang));
+
     let me = syncMe();
     refreshStats(me);
     renderAccounts(me);
@@ -1057,4 +1062,6 @@ export const initBusinessLogic = () => {
         renderAccounts(me);
         refreshStats(me);
     });
+
+    initPayAnalytics(currentLang);
 };

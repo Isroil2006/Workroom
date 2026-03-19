@@ -1,7 +1,7 @@
 import { DashboardPage, initDashboardLogic } from "../../pages/Dashboard/dashboard.js";
 import { BusinessPage, initBusinessLogic } from "../../pages/Business/business.js";
 import { TodoPage, initTodoLogic } from "../../pages/Tasks/tasks.js";
-import { VacationsPage } from "../../pages/Vacations/vacations.js";
+import { VacationsPage, initVacationsLogic } from "../../pages/Vacations/vacations.js";
 import { EmployeesPage, initEmployeesPage } from "../../pages/Employees/employees.js";
 import { MassangerPage, initMessengerLogic } from "../../pages/Messenger/messenger.js";
 import { infoportalPage } from "../../pages/InfoPortal/infoportal.js";
@@ -175,6 +175,7 @@ function renderPage(pageName) {
         initTodoLogic();
     } else if (pageName === "Vacations") {
         contentArea.innerHTML = VacationsPage;
+        initVacationsLogic();
     } else if (pageName === "Employees") {
         contentArea.innerHTML = EmployeesPage;
         initEmployeesPage();

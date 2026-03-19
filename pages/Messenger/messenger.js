@@ -1,3 +1,4 @@
+import { createMsgAnalyticsBtn, initMsgAnalytics } from "./analytics.js";
 import { translations } from "./translations.js";
 
 const EMOJIS = ["😀", "😂", "😍", "🥰", "😎", "😭", "🤔", "😅", "🔥", "👍", "❤️", "🎉", "✅", "💯", "🙏"];
@@ -317,8 +318,7 @@ const renderChatArea = () => {
                 </div>
             </div>
             <div class="msg-chat-header-right">
-                <button class="msg-icon-btn"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.8 9.64a19.79 19.79 0 01-3.07-8.67A2 2 0 012.71 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.53a16 16 0 006.56 6.56l1.06-1.06a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-                <button class="msg-icon-btn"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/></svg></button>
+                ${createMsgAnalyticsBtn(currentLang)}
             </div>
         </div>
         <div class="msg-feed" id="msg-feed">${renderMessages()}</div>
@@ -862,6 +862,7 @@ const attachChatEvents = () => {
         }
     });
     scrollFeed();
+    initMsgAnalytics(currentLang);
 };
 
 const attachRootEvents = () => {

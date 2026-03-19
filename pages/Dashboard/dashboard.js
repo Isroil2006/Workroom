@@ -1,3 +1,4 @@
+import { createDashAnalyticsBtn, initDashAnalytics } from "./analytics.js";
 import { translations } from "../Dashboard/translations.js";
 
 let allTests = JSON.parse(localStorage.getItem("myTests")) || [];
@@ -787,6 +788,10 @@ export const initDashboardLogic = () => {
     };
 
     updateUI();
+
+    const createBox = document.querySelector(".dashboard__create-box");
+    if (createBox) createBox.insertAdjacentHTML("beforeend", createDashAnalyticsBtn(currentLang));
+    initDashAnalytics(currentLang);
 };
 
 // 7. PRE-START

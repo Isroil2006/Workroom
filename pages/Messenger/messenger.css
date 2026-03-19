@@ -1130,18 +1130,3 @@
 .msg-attach-thumb:hover {
     transform: scale(1.04);
 }
-
-/* responsive */
-@media (max-width: 900px) {
-    .msg-info-panel {
-        display: none;
-    }
-}
-@media (max-width: 768px) {
-    .messenger-wrap {
-        padding: 14px;
-    }
-    .msg-sidebar {
-        width: 68px;
-    }
-}
