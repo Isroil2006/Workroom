@@ -66,7 +66,7 @@ export const translations = {
         new_project: "New Project",
         todo_title: "Tasks",
         add_project: "Add Project",
-        add_task: "+ Add Task",
+        add_task: "Add Task",
         list_view: "List",
         board_view: "Board",
         search_tasks: "Search tasks...",

@@ -1,0 +1,410 @@
+<!--
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>404 — Page Not Found</title>
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                min-height: 100vh;
+                background: #0f1123;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                overflow: hidden;
+            }
+
+            /* ── Stars background ── */
+            .stars {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 0;
+            }
+            .star {
+                position: absolute;
+                border-radius: 50%;
+                background: #fff;
+                animation: twinkle var(--d) ease-in-out infinite alternate;
+            }
+            @keyframes twinkle {
+                from {
+                    opacity: 0.1;
+                    transform: scale(0.8);
+                }
+                to {
+                    opacity: 0.9;
+                    transform: scale(1.2);
+                }
+            }
+
+            /* ── Floating orbs ── */
+            .orb {
+                position: fixed;
+                border-radius: 50%;
+                filter: blur(80px);
+                opacity: 0.18;
+                pointer-events: none;
+                z-index: 0;
+                animation: orbFloat 8s ease-in-out infinite alternate;
+            }
+            .orb-1 {
+                width: 420px;
+                height: 420px;
+                background: #5b6ef5;
+                top: -120px;
+                left: -100px;
+            }
+            .orb-2 {
+                width: 320px;
+                height: 320px;
+                background: #7c3aed;
+                bottom: -80px;
+                right: -80px;
+                animation-delay: -3s;
+            }
+            .orb-3 {
+                width: 200px;
+                height: 200px;
+                background: #06b6d4;
+                top: 50%;
+                left: 60%;
+                animation-delay: -5s;
+            }
+            @keyframes orbFloat {
+                from {
+                    transform: translate(0, 0) scale(1);
+                }
+                to {
+                    transform: translate(30px, 40px) scale(1.1);
+                }
+            }
+
+            /* ── Main card ── */
+            .card {
+                position: relative;
+                z-index: 1;
+                text-align: center;
+                padding: 60px 50px;
+                max-width: 560px;
+                width: calc(100% - 40px);
+            }
+
+            /* ── 404 number ── */
+            .big-404 {
+                font-size: clamp(100px, 22vw, 180px);
+                font-weight: 900;
+                line-height: 1;
+                background: linear-gradient(135deg, #5b6ef5 0%, #a78bfa 50%, #06b6d4 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                letter-spacing: -6px;
+                animation: numFloat 3s ease-in-out infinite alternate;
+                position: relative;
+                display: inline-block;
+            }
+            @keyframes numFloat {
+                from {
+                    transform: translateY(0px);
+                }
+                to {
+                    transform: translateY(-16px);
+                }
+            }
+
+            /* glitch effect */
+            .big-404::before,
+            .big-404::after {
+                content: "404";
+                position: absolute;
+                inset: 0;
+                background: inherit;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .big-404::before {
+                animation: glitch1 4s steps(1) infinite;
+                clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            }
+            .big-404::after {
+                animation: glitch2 4s steps(1) infinite;
+                clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            }
+            @keyframes glitch1 {
+                0%,
+                90%,
+                100% {
+                    transform: translate(0);
+                    opacity: 0;
+                }
+                92% {
+                    transform: translate(-4px, 1px);
+                    opacity: 0.7;
+                }
+                94% {
+                    transform: translate(4px, -1px);
+                    opacity: 0.7;
+                }
+                96% {
+                    transform: translate(0);
+                    opacity: 0;
+                }
+            }
+            @keyframes glitch2 {
+                0%,
+                88%,
+                100% {
+                    transform: translate(0);
+                    opacity: 0;
+                }
+                90% {
+                    transform: translate(4px, 2px);
+                    opacity: 0.6;
+                }
+                92% {
+                    transform: translate(-4px, -2px);
+                    opacity: 0.6;
+                }
+                94% {
+                    transform: translate(0);
+                    opacity: 0;
+                }
+            }
+
+            /* ── Spaceship icon ── */
+            .rocket-wrap {
+                margin: -10px auto 24px;
+                width: 72px;
+                height: 72px;
+                background: linear-gradient(135deg, rgba(91, 110, 245, 0.18), rgba(124, 58, 237, 0.18));
+                border-radius: 22px;
+                border: 1.5px solid rgba(91, 110, 245, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: rocketBob 2s ease-in-out infinite alternate;
+            }
+            @keyframes rocketBob {
+                from {
+                    transform: translateY(0) rotate(-5deg);
+                }
+                to {
+                    transform: translateY(-8px) rotate(5deg);
+                }
+            }
+
+            /* ── Text ── */
+            .title {
+                font-size: 24px;
+                font-weight: 800;
+                color: #e2e8ff;
+                margin-bottom: 12px;
+                letter-spacing: -0.3px;
+            }
+            .subtitle {
+                font-size: 15px;
+                color: #7b85b0;
+                line-height: 1.6;
+                margin-bottom: 8px;
+            }
+            .page-name {
+                display: inline-block;
+                background: rgba(91, 110, 245, 0.15);
+                border: 1px solid rgba(91, 110, 245, 0.3);
+                color: #a5b4fc;
+                font-size: 13px;
+                font-weight: 700;
+                padding: 5px 14px;
+                border-radius: 20px;
+                margin-bottom: 36px;
+                font-family: monospace;
+            }
+
+            /* ── Buttons ── */
+            .btn-group {
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .btn-back {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 13px 28px;
+                background: linear-gradient(135deg, #5b6ef5, #7c3aed);
+                color: #fff;
+                border: none;
+                border-radius: 14px;
+                font-size: 15px;
+                font-weight: 700;
+                cursor: pointer;
+                font-family: inherit;
+                text-decoration: none;
+                box-shadow: 0 8px 24px rgba(91, 110, 245, 0.4);
+                transition: all 0.2s;
+            }
+            .btn-back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 32px rgba(91, 110, 245, 0.5);
+            }
+            .btn-home {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 13px 28px;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1.5px solid rgba(255, 255, 255, 0.12);
+                color: #a5b4fc;
+                border-radius: 14px;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+                font-family: inherit;
+                text-decoration: none;
+                transition: all 0.2s;
+            }
+            .btn-home:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: rgba(91, 110, 245, 0.4);
+                color: #fff;
+            }
+
+            /* ── Bottom particles ── */
+            .particles {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 0;
+            }
+            .particle {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background: #5b6ef5;
+                animation: rise var(--d) linear infinite;
+                opacity: 0;
+            }
+            @keyframes rise {
+                0% {
+                    transform: translateY(100vh) scale(0);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.6;
+                }
+                90% {
+                    opacity: 0.3;
+                }
+                100% {
+                    transform: translateY(-100px) scale(1.5);
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Stars -->
+        <div class="stars" id="stars"></div>
+
+        <!-- Floating orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <!-- Rising particles -->
+        <div class="particles" id="particles"></div>
+
+        <div class="card">
+            <div class="big-404">404</div>
+
+            <div class="rocket-wrap">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2C12 2 7 6 7 12v4l-2 2v2h14v-2l-2-2v-4c0-6-5-10-5-10z" fill="url(#rg)" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" />
+                    <circle cx="12" cy="13" r="2" fill="rgba(255,255,255,0.8)" />
+                    <path d="M9 20c0 1.66 1.34 3 3 3s3-1.34 3-3" fill="rgba(91,110,245,0.6)" />
+                    <defs>
+                        <linearGradient id="rg" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#a78bfa" />
+                            <stop offset="100%" stop-color="#5b6ef5" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <h1 class="title">Page Not Found</h1>
+            <p class="subtitle">The page you're looking for hasn't been built yet.</p>
+            <div class="page-name" id="page-name-badge">unknown</div>
+
+            <div class="btn-group">
+                <a class="btn-back" onclick="history.back()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Go Back
+                </a>
+                <a class="btn-home" href="index.html">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Home
+                </a>
+            </div>
+        </div>
+
+        <script>
+            // Show page name from query param
+            const params = new URLSearchParams(location.search);
+            const pageName = params.get("page");
+            if (pageName) {
+                document.getElementById("page-name-badge").textContent = `"${pageName}" page`;
+                document.title = `404 — ${pageName} Not Found`;
+            }
+
+            // Generate stars
+            const starsEl = document.getElementById("stars");
+            for (let i = 0; i < 120; i++) {
+                const s = document.createElement("div");
+                s.className = "star";
+                const size = Math.random() * 2.5 + 0.5;
+                s.style.cssText = `
+            left:${Math.random() * 100}%;top:${Math.random() * 100}%;
+            width:${size}px;height:${size}px;
+            --d:${(Math.random() * 3 + 1.5).toFixed(1)}s;
+            animation-delay:${(Math.random() * 4).toFixed(1)}s;
+        `;
+                starsEl.appendChild(s);
+            }
+
+            // Generate particles
+            const particlesEl = document.getElementById("particles");
+            const colors = ["#5b6ef5", "#7c3aed", "#06b6d4", "#a78bfa", "#818cf8"];
+            for (let i = 0; i < 28; i++) {
+                const p = document.createElement("div");
+                p.className = "particle";
+                p.style.cssText = `
+            left:${Math.random() * 100}%;
+            --d:${(Math.random() * 8 + 5).toFixed(1)}s;
+            animation-delay:${(Math.random() * 8).toFixed(1)}s;
+            background:${colors[Math.floor(Math.random() * colors.length)]};
+            width:${Math.random() * 4 + 2}px;height:${Math.random() * 4 + 2}px;
+        `;
+                particlesEl.appendChild(p);
+            }
+        </script>
+    </body>
+</html>
+-->

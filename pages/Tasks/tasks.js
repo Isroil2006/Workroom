@@ -168,7 +168,7 @@ export const TodoPage = `
     </div>
     <button class="todo-create-btn" id="todo-create-task-btn">
       <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-      <span id="todo-add-task-label">+ Add Task</span>
+      <span id="todo-add-task-label">Add Task</span>
     </button>
   </div>
 

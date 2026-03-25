@@ -18,6 +18,7 @@ export const translations = {
         job_position: "Ish holati",
         position: "Vazifasi",
         level: "Daraja (Junior, Middle, Senior)",
+        level_mini: "Daraja",
         // btns
         cancel: "Bekor qilish",
         save: "Saqlash",
@@ -43,6 +44,7 @@ export const translations = {
         job_position: "Job position",
         position: "Position",
         level: "Level (Junior, Middle, Senior)",
+        level_mini: "Level",
         // btns
         cancel: "Cancel",
         save: "Save",
@@ -68,6 +70,7 @@ export const translations = {
         position: "Должность",
         gender: "Пол",
         level: "Уровень (Junior, Middle, Senior)",
+        level_mini: "Уровень",
         // btns
         cancel: "Отменить",
         save: "Сохранить",

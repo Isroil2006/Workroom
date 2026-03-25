@@ -65,7 +65,7 @@ const renderRoot = () => {
             <h1 class="vac-title">${tr.title}</h1>
             <div class="vac-header-btns">
                 ${createAnalyticsButton(vacLang)}
-                <button class="vac-add-btn" id="vac-add-btn">
+                <button data-perm="vac_add_tour" class="vac-add-btn" id="vac-add-btn">
                     <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
                     ${tr.add_btn}
                 </button>
@@ -146,10 +146,10 @@ const renderCard = (t) => {
             <div class="vac-card-img-overlay"></div>
             ${categoryBadge(t.category, tr)}
             <div class="vac-card-actions-top">
-                <button class="vac-card-action-btn vac-edit-btn" data-id="${t.id}" title="${tr.edit}">
+                <button data-perm="vac_edit_tour" class="vac-card-action-btn vac-edit-btn" data-id="${t.id}" title="${tr.edit}">
                     <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 </button>
-                <button class="vac-card-action-btn vac-del-btn" data-id="${t.id}" title="${tr.delete}">
+                <button data-perm="vac_delete_tour" class="vac-card-action-btn vac-del-btn" data-id="${t.id}" title="${tr.delete}">
                     <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 </button>
             </div>

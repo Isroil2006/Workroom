@@ -1,5 +1,5 @@
 .navigation-wrapper {
-    width: max-content;
+    width: 18%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -87,7 +87,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: auto;
 
     a {
         text-decoration: none;
