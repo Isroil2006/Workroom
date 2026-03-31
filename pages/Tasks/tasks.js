@@ -1,5 +1,6 @@
 import { createTaskAnalyticsBtn, initTaskAnalytics } from "./analytics.js";
 import { translations } from "./trasnslations.js";
+import { applyPermissions } from "../Employees/permission.js";
 
 let currentLang = localStorage.getItem("language") || "uz";
 const t = (key) => translations[currentLang]?.[key] ?? key;
@@ -128,14 +129,17 @@ const dueDateHtml = (dateStr) => {
 export const TodoPage = `
 <div class="todo-wrap">
   <div class="todo-header">
-    <div class="todo-header-left">
-      <h1 class="todo-main-title">
+    <div class="todo-header-left" style="display:flex; align-items:center;">
+      <h1 class="todo-main-title" style="display:flex; align-items:center;">
         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" style="flex-shrink:0">
           <path d="M9 11l3 3L22 4" stroke="#5b6ef5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#5b6ef5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span id="todo-project-title">Tasks</span>
       </h1>
+      <button id="todo-delete-project-btn" class="todo-action-btn del" data-perm="task_delete_project" title="Delete Project" style="margin-left: 0; display: none; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; border: none; background: rgba(239, 68, 68, 0.1); color: #ef4444; opacity: 1;">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
     </div>
     <div class="todo-header-right">
       <div class="todo-view-tabs">
@@ -148,7 +152,7 @@ export const TodoPage = `
           <span id="tab-board-label">Board</span>
         </button>
       </div>
-      <button class="todo-add-project-btn" id="todo-add-project-btn">
+      <button class="todo-add-project-btn" id="todo-add-project-btn" data-perm="task_add_project">
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
         <span id="todo-add-project-label">+ Project</span>
       </button>
@@ -166,7 +170,7 @@ export const TodoPage = `
       <button class="todo-filter-btn"        data-filter="progress" id="filter-progress">In Progress</button>
       <button class="todo-filter-btn"        data-filter="done"     id="filter-done">Done</button>
     </div>
-    <button class="todo-create-btn" id="todo-create-task-btn">
+    <button class="todo-create-btn" id="todo-create-task-btn" data-perm="task_add_task">
       <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
       <span id="todo-add-task-label">Add Task</span>
     </button>
@@ -399,7 +403,6 @@ const renderProjectTabs = () => {
             (p) => `
         <div class="todo-project-tab ${p.id === currentProjectId ? "active" : ""}" data-pid="${p.id}">
             <span>${p.name}</span>
-            <button class="todo-project-tab-del" data-pid="${p.id}">✕</button>
         </div>
     `,
         )
@@ -407,22 +410,9 @@ const renderProjectTabs = () => {
 
     el.querySelectorAll(".todo-project-tab").forEach((tab) => {
         tab.addEventListener("click", (e) => {
-            if (e.target.classList.contains("todo-project-tab-del")) return;
             currentProjectId = tab.dataset.pid;
             renderProjectTabs();
             renderView();
-        });
-    });
-    el.querySelectorAll(".todo-project-tab-del").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            showDeleteConfirm(t("confirm_delete_project"), () => {
-                const ps = getProjects().filter((p) => p.id !== btn.dataset.pid);
-                saveProjects(ps);
-                if (currentProjectId === btn.dataset.pid) currentProjectId = ps[0]?.id || null;
-                renderProjectTabs();
-                renderView();
-            });
         });
     });
 };
@@ -432,6 +422,7 @@ const renderView = () => {
     const projects = getProjects();
     const noProj = $("todo-no-projects");
     const container = $("todo-view-container");
+    const delProjBtn = $("todo-delete-project-btn");
     if (!container) return;
 
     if (projects.length === 0) {
@@ -439,11 +430,19 @@ const renderView = () => {
             noProj.style.display = "flex";
             $("no-projects-msg").textContent = t("no_projects");
         }
+        if (delProjBtn) delProjBtn.style.display = "none";
         container.innerHTML = "";
         if ($("todo-project-title")) $("todo-project-title").textContent = t("todo_title");
         return;
     }
     if (noProj) noProj.style.display = "none";
+    if (delProjBtn) {
+        const cu = getCurrent();
+        if (cu) applyPermissions(cu.username);
+        if (delProjBtn.style.display !== "none") {
+            delProjBtn.style.display = "flex";
+        }
+    }
     if (!currentProjectId || !projects.find((p) => p.id === currentProjectId)) currentProjectId = projects[0].id;
 
     const proj = projects.find((p) => p.id === currentProjectId);
@@ -456,6 +455,9 @@ const renderView = () => {
 
     if (currentView === "list") renderListView(tasks, proj);
     else renderBoardView(tasks, proj);
+
+    const cu = getCurrent();
+    if (cu) applyPermissions(cu.username);
 };
 
 // ─── LIST VIEW ────────────────────────────────────────────────
@@ -482,7 +484,7 @@ const renderListView = (tasks) => {
               </span>
               <span class="todo-section-count ${cfg.cls}">${tasks.filter((t) => getVisibleStatus(t) === status).length}</span>
             </div>
-            <button class="todo-add-in-section" data-status="${status}">+ ${t("add_task")}</button>
+            <button class="todo-add-in-section" data-status="${status}" data-perm="task_add_task">+ ${t("add_task")}</button>
           </div>
           <div class="todo-list-section-body" id="list-section-${status}">
             <div class="todo-list-table-header">
@@ -603,7 +605,7 @@ const renderBoardView = (tasks, proj) => {
               <span class="todo-board-col-label ${cfg.cls}">${col.label}</span>
               <span class="todo-board-col-count ${cfg.cls}">${all.filter((t) => getVisibleStatus(t) === col.key).length}</span>
             </div>
-            <button class="todo-board-add-btn" data-col="${col.key}">+</button>
+            <button class="todo-board-add-btn" data-col="${col.key}" data-perm="task_add_task">+</button>
           </div>
           <div class="todo-board-col-body" id="board-col-${col.key}" data-col="${col.key}">
             ${colTasks.length ? colTasks.map((task) => renderBoardCard(task)).join("") : `<div class="todo-board-empty">${t("empty_column")}</div>`}
@@ -998,6 +1000,9 @@ export const initTodoLogic = () => {
     renderProjectTabs();
     renderView();
 
+    const cu = getCurrent();
+    if (cu) applyPermissions(cu.username);
+
     // View tabs
     $("tab-list")?.addEventListener("click", () => {
         currentView = "list";
@@ -1035,6 +1040,18 @@ export const initTodoLogic = () => {
             return;
         }
         openTaskModal(null);
+    });
+
+    // Delete project
+    $("todo-delete-project-btn")?.addEventListener("click", () => {
+        if (!currentProjectId) return;
+        showDeleteConfirm(t("confirm_delete_project"), () => {
+            const ps = getProjects().filter((p) => p.id !== currentProjectId);
+            saveProjects(ps);
+            currentProjectId = ps[0]?.id || null;
+            renderProjectTabs();
+            renderView();
+        });
     });
 
     // Add project

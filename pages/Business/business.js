@@ -429,13 +429,14 @@ const renderDocsMini = (me) => {
                   else if (p.status === "waiting") color = "#f59e0b";
                   else color = "#5b6ef5";
                   const sign = isIn ? "+" : "-";
+                  const fromToLabel = isIn ? t("label_from") : t("label_to");
                   return `
             <div class="biz-doc-mini-row">
               <div style="display:flex;align-items:center;gap:10px;flex:1">
                 <div class="biz-doc-mini-icon"><img src="../../pages/Business/images/folder icon.svg" alt=""></div>
                 <div>
                   <p class="biz-user-name">${p.desc || t("documents")}</p>
-                  <p class="biz-user-phone">${p.date || "—"}</p>
+                  <p class="biz-user-phone">${fromToLabel} ${p.recipientName || "—"} · ${p.date || "—"}</p>
                 </div>
               </div>
               <span style="font-weight:700;color:${color};font-size:13px">${sign}${fmt(p.amount)}</span>
@@ -510,13 +511,18 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
                   const recipUser = allUsers.find((u) => u.username === p.recipientName);
                   const badgeClass = isIn ? "biz-badge-incoming" : isWait ? "biz-badge-pending" : "biz-badge-confirmed";
                   const badgeText = isIn ? t("badge_incoming") : isWait ? t("badge_pending") : t("badge_confirmed");
+                  const fromToLabel = isIn ? t("label_from") : t("label_to");
+                  const fromToName = p.recipientName || "—";
                   return `
             <div class="biz-doc-row-wrap${p._expanded ? " expanded" : ""}">
               <div class="biz-row docs-cols">
                 <div class="biz-desc-cell"><span class="${badgeClass}">${badgeText}</span></div>
                 <div class="biz-user-cell">
-                  ${recipUser ? avatarHTML(recipUser, 28) : `<div class="biz-avatar" style="background:${avatarColor(p.recipientName || "")};width:28px;height:28px;font-size:11px">${initials(p.recipientName || "?")}</div>`}
-                  <span class="biz-small">${p.recipientName || "—"}</span>
+                  ${recipUser ? avatarHTML(recipUser, 28) : `<div class="biz-avatar" style="background:${avatarColor(fromToName || "")};width:28px;height:28px;font-size:11px">${initials(fromToName || "?")}</div>`}
+                  <div style="display:flex;flex-direction:column;gap:1px">
+                    <span class="biz-small" style="font-size:10px;color:#8892a4">${fromToLabel}</span>
+                    <span class="biz-small" style="font-weight:600">${fromToName}</span>
+                  </div>
                 </div>
                 <span class="biz-cell" style="font-weight:700;color:${isIn ? "#22c55e" : "#1a1d2e"}">${isIn ? "+" : ""}${fmt(p.amount)}</span>
                 <span class="biz-cell biz-small">${p.date || "—"}</span>
@@ -527,13 +533,6 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
                   <button class="biz-icon-btn expand-btn" data-pi="${ri}" style="background:#f1f3fa;color:#5a6279">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="${p._expanded ? "M18 15l-6-6-6 6" : "M6 9l6 6 6-6"}" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                   </button>
-                  ${
-                      !isIn
-                          ? `<button class="biz-icon-btn del-doc-btn" data-pi="${ri}" style="background:#fee2e2;color:#ef4444">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </button>`
-                          : ""
-                  }
                 </div>
               </div>
               ${
@@ -551,6 +550,10 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
                   <div class="biz-exp-footer-item">
                     <span class="biz-exp-label">${t("description")}</span>
                     <span class="biz-exp-val biz-exp-desc-text">${p.desc || t("documents")}</span>
+                  </div>
+                  <div class="biz-exp-footer-item">
+                    <span class="biz-exp-label">${isIn ? t("label_from") : t("label_to")}</span>
+                    <span class="biz-exp-val">${p.recipientName || "—"}</span>
                   </div>
                   <div class="biz-exp-footer-item biz-exp-total">
                     <span class="biz-exp-label">${t("total_amount")}</span>
@@ -592,24 +595,6 @@ const renderDocsFull = (me, statusF = "", numF = "") => {
             (btn.onclick = (e) => {
                 e.stopPropagation();
                 openSendDrawer(syncMe(), +btn.dataset.pi);
-            }),
-    );
-
-    el.querySelectorAll(".del-doc-btn").forEach(
-        (btn) =>
-            (btn.onclick = (e) => {
-                e.stopPropagation();
-                if (!confirm(t("confirm_delete"))) return;
-                const us = getUsers();
-                const m = us.find((u) => u.username === me.username);
-                if (m) {
-                    m.payments.splice(+btn.dataset.pi, 1);
-                    saveUsers(us);
-                }
-                const fr = syncMe();
-                renderDocsFull(fr, statusF, numF);
-                renderDocsMini(fr);
-                refreshStats(fr);
             }),
     );
 };
@@ -789,7 +774,7 @@ const applyPendingPayment = (me) => {
     if (!recUser.payments) recUser.payments = [];
     recUser.payments.push({
         docNumber: `INCOME/${Date.now()}`,
-        desc: desc || `Transfer from ${me.username}`,
+        desc: desc || `${t("transfer_from")} ${me.username}`,
         amount,
         recipientName: me.username,
         status: "paid",
@@ -1023,7 +1008,10 @@ export const initBusinessLogic = () => {
     });
 
     $("add-card-btn")?.addEventListener("click", () => {
-        ["cm-number", "cm-holder", "cm-expiry", "cm-balance"].forEach((id) => ($(id).value = ""));
+        ["cm-number", "cm-holder", "cm-expiry", "cm-balance"].forEach((id) => {
+            $(id).value = "";
+            $(id).style.borderColor = "";
+        });
         $("card-modal").style.display = "flex";
     });
     $("cm-number")?.addEventListener("input", (e) => {
@@ -1044,7 +1032,19 @@ export const initBusinessLogic = () => {
     });
     $("cm-save")?.addEventListener("click", () => {
         const raw = $("cm-number").value.trim().replace(/\s/g, "");
-        if (!raw) return alert(t("alert_enter_card"));
+        const holder = $("cm-holder").value.trim();
+        const expiry = $("cm-expiry").value.trim();
+
+        let hasError = false;
+        // Karta raqami 16ta raqam bo'lishi kerak
+        if (raw.length !== 16) { $("cm-number").style.borderColor = "#ef4444"; hasError = true; } else { $("cm-number").style.borderColor = ""; }
+        // Ism 3ta harfdan kam bo'lmasligi kerak
+        if (holder.length < 3) { $("cm-holder").style.borderColor = "#ef4444"; hasError = true; } else { $("cm-holder").style.borderColor = ""; }
+        // Amal qilish muddati MM/YY formatida, ya'ni "/" bilan birga 5ta belgi (4ta raqam)
+        if (expiry.length !== 5) { $("cm-expiry").style.borderColor = "#ef4444"; hasError = true; } else { $("cm-expiry").style.borderColor = ""; }
+
+        if (hasError) return;
+
         const us = getUsers();
         const m = us.find((u) => u.username === me.username);
         if (!m.paymentMethods) m.paymentMethods = [];
@@ -1052,8 +1052,8 @@ export const initBusinessLogic = () => {
             type: "card",
             number: raw.replace(/(.{4})/g, "$1 ").trim(),
             displayNumber: raw.slice(0, 4) + " **** **** " + raw.slice(-4),
-            holder: $("cm-holder").value.trim(),
-            expiry: $("cm-expiry").value.trim(),
+            holder: holder,
+            expiry: expiry,
             balance: parseFloat($("cm-balance").value) || 0,
         });
         saveUsers(us);

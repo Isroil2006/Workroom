@@ -35,6 +35,13 @@ const initLanguage = () => {
             const lang = item.dataset.value;
             localStorage.setItem("language", lang);
 
+            // Tanlangan sanani saqlash (InfoPortal uchun)
+            const calPanel = document.getElementById("cal-events-panel");
+            const calEventsDate = document.getElementById("cal-events-date");
+            if (calPanel?.classList.contains("active") && calEventsDate?.textContent) {
+                localStorage.setItem("cal_selected_date", calEventsDate.textContent);
+            }
+
             // Sahifani reload qilish
             window.location.reload();
         });

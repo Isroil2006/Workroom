@@ -56,6 +56,8 @@ export const translations = {
         correct: "To'g'ri",
         wrong: "Notog'ri",
         enter_test_question: "Savolni kiriting",
+        save_settings: "Sozlamalarni saqlash",
+        setting_saved: "Sozlamalar saqlandi",
         // renderQuiz
         question: "Savol",
         finish_test: "Testni yakunlash",
@@ -125,6 +127,8 @@ export const translations = {
         correct: "Correct",
         wrong: "Wrong",
         enter_test_question: "Enter test question",
+        save_settings: "Save Settings",
+        setting_saved: "Settings Saved",
         // renderQuiz
         question: "Question",
         finish_test: "Finish test",
@@ -194,6 +198,8 @@ export const translations = {
         correct: "Правильно",
         wrong: "Неправильно",
         enter_test_question: "Введите вопрос теста",
+        save_settings: "Сохранить настройки",
+        setting_saved: "Настройки сохранены",
         // renderQuiz
         question: "Вопрос",
         finish_test: "Завершить тест",

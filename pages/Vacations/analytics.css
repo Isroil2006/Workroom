@@ -99,6 +99,7 @@
         0 -1px 0 #e2e8f0;
     font-family: inherit;
 }
+
 @keyframes vacAnPanelIn {
     from {
         transform: translateY(100%);

@@ -39,6 +39,12 @@ let formCoverDataUrl = null; // base64 or url
 let formGalleryImages = []; // [{dataUrl, isFile}]
 let formContentLang = "uz"; // which lang tab is active in form
 
+// booking state
+let bookModalOpen = false;
+let bookGuests = 1;
+let bookSelectedMethodIdx = 0;
+let bookStep = 1; // 1: payment form, 2: success
+
 const $v = (id) => document.getElementById(id);
 const esc = (s) =>
     String(s || "")
@@ -324,6 +330,107 @@ const renderDetailInline = () => {
         </div>
     </div>`;
 };
+
+// ─── BOOKING MODAL ────────────────────────────
+const getBookModalHTML = () => {
+    vacLang = localStorage.getItem("language") || "uz";
+    const tr = vacTranslations[vacLang] || vacTranslations.uz;
+    const t = getTours().find(x => x.id === detailTourId);
+    if (!t) return "";
+
+    const cu = JSON.parse(localStorage.getItem("currentUser")) || null;
+    if (!cu) {
+        return `
+            <div class="vac-book-box-center">
+                <h3>${tr.book_login}</h3>
+                <button class="vac-btn-primary vac-book-login-btn" id="vac-book-close">${tr.close || "Yopish"}</button>
+            </div>`;
+    }
+
+    const name = ml(t.name, vacLang);
+    const city = ml(t.city, vacLang);
+    const totalCost = Number(t.price) * bookGuests;
+
+    if (bookStep === 2) {
+        return `
+            <div class="vac-book-box-center">
+                <div class="vac-book-success-icon">
+                    <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <h2 class="vac-book-success-title">${tr.book_success}</h2>
+                <p class="vac-book-success-desc"><strong>${name}</strong> ${tr.book_success_desc}</p>
+                <div class="vac-book-summary-box">
+                    <div class="vac-book-summary-row">
+                        <span class="vac-book-summary-label">${tr.book_guests}</span>
+                        <span class="vac-book-summary-val">${bookGuests}</span>
+                    </div>
+                    <div class="vac-book-summary-row">
+                        <span class="vac-book-summary-label">${tr.book_total}</span>
+                        <span class="vac-book-summary-val-total">$${totalCost.toLocaleString()}</span>
+                    </div>
+                </div>
+                <button class="vac-btn-primary vac-book-confirm-btn" id="vac-book-close">${tr.book_continue}</button>
+            </div>`;
+    }
+
+    const methods = cu.paymentMethods || [];
+    const fmt = n => "$" + Number(n||0).toLocaleString("en-US", {minimumFractionDigits:2});
+
+    return `
+            <div class="vac-add-modal-header vac-book-header">
+                <h2 class="vac-add-modal-title">${tr.book_title}</h2>
+                <button class="vac-modal-close" id="vac-book-close">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+                <div class="vac-book-body">
+                <div class="vac-book-tour-info">
+                    <img src="${t.coverImage || (t.images&&t.images[0]) || ''}" class="vac-book-tour-img" onerror="this.src='https://images.unsplash.com/photo-1488085061387-422e29b40080?w=200&q=80'"/>
+                    <div>
+                        <h4 class="vac-book-tour-title">${name}</h4>
+                        ${city ? `<div class="vac-book-tour-city">${city}</div>` : ''}
+                        <div class="vac-book-tour-price">$${Number(t.price).toLocaleString()} <span class="vac-book-tour-price-per">${tr.per_person}</span></div>
+                    </div>
+                </div>
+
+                <div class="vac-book-section">
+                    <label class="vac-book-label">${tr.book_select_guests}</label>
+                    <div class="vac-book-guest-ctrl">
+                        <button class="vac-guest-btn" id="vac-g-minus">-</button>
+                        <span class="vac-book-guest-count">${bookGuests}</span>
+                        <button class="vac-guest-btn" id="vac-g-plus">+</button>
+                    </div>
+                </div>
+
+                <div class="vac-book-section last">
+                    <label class="vac-book-label">${tr.book_select_payment}</label>
+                    <div class="vac-book-methods">
+                        ${methods.length ? methods.map((m, i) => `
+                        <label class="vac-book-method-item ${bookSelectedMethodIdx === i ? 'active' : ''}">
+                            <input type="radio" name="b-method" value="${i}" ${bookSelectedMethodIdx === i ? 'checked' : ''} class="vac-book-method-radio"/>
+                            <div class="vac-book-method-info">
+                                <div class="vac-book-method-top">
+                                    <span class="vac-book-method-name">${m.type==='card'?'💳':'🏦'} ${m.displayNumber || m.number}</span>
+                                    <span class="vac-book-method-bal ${Number(m.balance)<totalCost ? 'error' : ''}">${fmt(m.balance)}</span>
+                                </div>
+                                <span class="vac-book-method-sub">${m.bank || m.expiry || ''}</span>
+                            </div>
+                        </label>
+                        `).join("") : `<div class="vac-book-no-methods">${tr.book_no_methods}</div>`}
+                    </div>
+                </div>
+
+                <div class="vac-book-total-row">
+                    <span class="vac-book-total-label">${tr.book_total_label}</span>
+                    <span class="vac-book-total-val">$${totalCost.toLocaleString()}</span>
+                </div>
+
+                <button class="vac-btn-primary vac-book-confirm-btn" id="vac-book-confirm" ${!methods.length ? 'disabled' : ''}>
+                    ${tr.book_pay}
+                </button>
+            </div>`;
+};
+
 
 // ─── ADD / EDIT MODAL ─────────────────────────
 const renderAddModal = () => {
@@ -828,8 +935,150 @@ const closeAddModal = () => {
     renderRoot();
 };
 
+const closeBookModal = () => {
+    bookModalOpen = false;
+    const container = document.getElementById("vac-book-modal-container");
+    if (container) container.remove();
+};
+
+const updateBookModalUI = () => {
+    const box = document.getElementById("vac-book-modal-box");
+    if (box) {
+        box.innerHTML = getBookModalHTML();
+        attachBookModalEvents();
+    }
+};
+
+const openBookModal = () => {
+    bookModalOpen = true;
+    bookGuests = 1;
+    bookSelectedMethodIdx = 0;
+    bookStep = 1;
+
+    let ol = document.getElementById("vac-book-modal-container");
+    if (!ol) {
+        ol = document.createElement("div");
+        ol.className = "vac-overlay";
+        ol.id = "vac-book-modal-container";
+        const inner = document.createElement("div");
+        inner.className = "vac-add-modal vac-book-modal-box";
+        inner.id = "vac-book-modal-box";
+        ol.appendChild(inner);
+        document.body.appendChild(ol);
+    }
+    updateBookModalUI();
+};
+
+const attachBookModalEvents = () => {
+    $v("vac-book-close")?.addEventListener("click", closeBookModal);
+
+    const ol = $v("vac-book-modal-container");
+    if (ol) ol.addEventListener("click", (e) => {
+        if (e.target === ol) closeBookModal();
+    });
+
+    if (bookStep === 1) {
+        $v("vac-g-minus")?.addEventListener("click", () => {
+            if (bookGuests > 1) { bookGuests--; updateBookModalUI(); }
+        });
+        $v("vac-g-plus")?.addEventListener("click", () => {
+            if (bookGuests < 20) { bookGuests++; updateBookModalUI(); }
+        });
+
+        document.querySelectorAll('input[name="b-method"]').forEach(r => {
+            r.addEventListener("change", (e) => {
+                bookSelectedMethodIdx = parseInt(e.target.value);
+                updateBookModalUI();
+            });
+        });
+
+        $v("vac-book-confirm")?.addEventListener("click", processTourPayment);
+    }
+};
+
+const processTourPayment = () => {
+    const t = getTours().find(x => x.id === detailTourId);
+    if (!t) return;
+    const totalCost = Number(t.price) * bookGuests;
+
+    try {
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const cuStr = localStorage.getItem("currentUser");
+        if (!cuStr) return;
+        const cu = JSON.parse(cuStr);
+
+        const myUser = users.find(u => u.username === cu.username);
+        if (!myUser) return;
+
+        const method = myUser.paymentMethods && myUser.paymentMethods[bookSelectedMethodIdx];
+        if (!method) return;
+
+        if (Number(method.balance) < totalCost) {
+            const btn = $v("vac-book-confirm");
+            if (btn) {
+                const oldHtml = btn.innerHTML;
+                const oldBg = btn.style.backgroundColor;
+                btn.style.backgroundColor = "#ef4444";
+                btn.textContent = "Mablag' yetarli emas";
+                setTimeout(() => {
+                    btn.style.backgroundColor = oldBg;
+                    btn.innerHTML = oldHtml;
+                }, 2000);
+            }
+            return;
+        }
+
+        // Deduct balance
+        method.balance = Number(method.balance) - totalCost;
+
+        // Add payment record
+        if (!myUser.payments) myUser.payments = [];
+        const name = ml(t.name, vacLang);
+        myUser.payments.push({
+            docNumber: `TOUR/${Date.now()}`,
+            desc: `Tur to'lovi: ${name} (${bookGuests} kishi)`,
+            amount: totalCost,
+            recipientName: "Workroom Agency",
+            status: "paid",
+            isIncoming: false,
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            createDate: new Date().toLocaleDateString(),
+            createTime: new Date().toLocaleTimeString(),
+            method: method.type
+        });
+
+        // Save booking for calendar
+        const bookings = JSON.parse(localStorage.getItem("vac_bookings") || "[]");
+        const bookingId = `booking_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+        const bookDate = new Date();
+        bookings.push({
+            id: bookingId,
+            username: cu.username,
+            tourId: t.id,
+            tourName: name,
+            guests: bookGuests,
+            totalCost: totalCost,
+            bookedAt: bookDate.toISOString().split('T')[0],
+            bookedAtFull: bookDate.toISOString(),
+            tourDays: t.days || 7
+        });
+        localStorage.setItem("vac_bookings", JSON.stringify(bookings));
+
+        // Save back
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("currentUser", JSON.stringify(myUser));
+
+        bookStep = 2; // Success step
+        updateBookModalUI();
+    } catch (e) {
+        console.error(e);
+    }
+};
+
 // ─── DETAIL EVENTS ────────────────────────────
 let mainImgIdx = 0; // current index in big main image
+
 
 const attachDetailEvents = () => {
     $v("vac-detail-back")?.addEventListener("click", () => {
@@ -838,6 +1087,11 @@ const attachDetailEvents = () => {
         clearUiState();
         renderRoot();
     });
+
+    const bd = $v("vac-detail-page");
+    if (bd) {
+        bd.querySelector(".vac-book-btn")?.addEventListener("click", openBookModal);
+    }
 
     const t = getTours().find((x) => x.id === detailTourId);
     const imgs = t?.images && t.images.length ? t.images : [t?.coverImage || ""];

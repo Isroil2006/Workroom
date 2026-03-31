@@ -4,7 +4,7 @@ import { TodoPage, initTodoLogic } from "../../pages/Tasks/tasks.js";
 import { VacationsPage, initVacationsLogic } from "../../pages/Vacations/vacations.js";
 import { EmployeesPage, initEmployeesPage } from "../../pages/Employees/employees.js";
 import { MassangerPage, initMessengerLogic } from "../../pages/Messenger/messenger.js";
-import { infoportalPage } from "../../pages/InfoPortal/infoportal.js";
+import { InfoPortalPage, initInfoPortalLogic } from "../../pages/InfoPortal/infoportal.js";
 import { applyPermissions, getPermissions } from "../../pages/Employees/permission.js";
 
 const navigationWrapper = document.querySelector(".navigation-wrapper");
@@ -14,12 +14,12 @@ const savedPage = localStorage.getItem("currentPage") || "Tests";
 export const translations = {
     uz: {
         nav_tests: "Testlar",
-        nav_business: "To'lo'vlar",
+        nav_business: "To'lovlar",
         nav_calendar: "Vazifalar",
         nav_vacations: "Ta'tillar",
         nav_employees: "Xodimlar",
         nav_messenger: "Messenger",
-        nav_infoportal: "Ma'lumot portali",
+        nav_infoportal: "Kalendar",
         nav_support: "Yordam",
         nav_logout: "Chiqish",
     },
@@ -30,7 +30,7 @@ export const translations = {
         nav_vacations: "Vacations",
         nav_employees: "Employees",
         nav_messenger: "Messenger",
-        nav_infoportal: "Info Portal",
+        nav_infoportal: "Calendar",
         nav_support: "Support",
         nav_logout: "Logout",
     },
@@ -41,7 +41,7 @@ export const translations = {
         nav_vacations: "Отпуска",
         nav_employees: "Сотрудники",
         nav_messenger: "Мессенджер",
-        nav_infoportal: "Инфопортал",
+        nav_infoportal: "Календарь",
         nav_support: "Поддержка",
         nav_logout: "Выход",
     },
@@ -194,7 +194,8 @@ const renderPage = (pageName) => {
         contentArea.innerHTML = MassangerPage;
         initMessengerLogic();
     } else if (pageName === "Infoportal") {
-        contentArea.innerHTML = infoportalPage;
+        contentArea.innerHTML = InfoPortalPage;
+        initInfoPortalLogic();
     }
 
     localStorage.setItem("currentPage", pageName);

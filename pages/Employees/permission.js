@@ -15,6 +15,11 @@ const DEFAULT_PERMISSIONS = {
     vac_edit_tour: true,
     vac_delete_tour: true,
 
+    // Tasks
+    task_delete_project: true,
+    task_add_project: true,
+    task_add_task: true,
+
     // Employees
     emp_perm_btn: true,
     emp_edit_btn: true,
@@ -63,6 +68,11 @@ const TR = {
         nav_business: "Payments",
         nav_infoportal: "InfoPortal",
         //------------------------------------
+        // Tasks
+        task_delete_project: "Loyihani o'chirish",
+        task_add_project: "Yangi loyiha qo'shish",
+        task_add_task: "Yangi vazifa qo'shish",
+        //------------------------------------
         // Vacations
         vac_add_tour: "Yangi tur qo'shish",
         vac_edit_tour: "Turni tahrirlash",
@@ -89,6 +99,11 @@ const TR = {
         nav_employees: "Employees",
         nav_business: "Payments",
         nav_infoportal: "InfoPortal",
+        //------------------------------------
+        // Tasks
+        task_delete_project: "Delete project",
+        task_add_project: "Add project",
+        task_add_task: "Add task",
         //------------------------------------
         // Vacations
         vac_add_tour: "Add tour",
@@ -117,6 +132,11 @@ const TR = {
         nav_business: "Платежи",
         nav_infoportal: "InfoPortal",
         //------------------------------------
+        // Tasks
+        task_delete_project: "Удалить проект",
+        task_add_project: "Добавить проект",
+        task_add_task: "Добавить задачу",
+        //------------------------------------
         // Vacations
         vac_add_tour: "Добавить тур",
         vac_edit_tour: "Редактировать тур",
@@ -138,7 +158,15 @@ const getModalSections = (tr) => [
             //------------------------------------------------------------------------
             { key: "nav_business", label: tr.nav_business },
             //------------------------------------------------------------------------
-            { key: "nav_tasks", label: tr.nav_tasks },
+            {
+                key: "nav_tasks",
+                label: tr.nav_tasks,
+                subs: [
+                    { key: "task_add_project", label: tr.task_add_project },
+                    { key: "task_add_task", label: tr.task_add_task },
+                    { key: "task_delete_project", label: tr.task_delete_project }
+                ]
+            },
             //------------------------------------------------------------------------
             {
                 key: "nav_vacations",

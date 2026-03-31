@@ -137,7 +137,7 @@ const renderDetailView = (container, testId) => {
                             <div><small>Sec</small><br><input type="number" id="sec-input" value="${test.seconds || 0}" class="input" style="width: 80px;"></div>
                         </div>
                     </div>
-                    <button class="btn save-time-btn">Save Settings</button>
+                    <button class="btn save-time-btn">${t("save_settings")}</button>
                 </div>
             </div>
         </div>
@@ -166,6 +166,13 @@ const renderDetailView = (container, testId) => {
     items.forEach((item) => {
         item.addEventListener("click", () => {
             localStorage.setItem("language", item.dataset.value);
+
+            const calPanel = document.getElementById("cal-events-panel");
+            const calEventsDate = document.getElementById("cal-events-date");
+            if (calPanel?.classList.contains("active") && calEventsDate?.textContent) {
+                localStorage.setItem("cal_selected_date", calEventsDate.textContent);
+            }
+
             window.location.reload();
         });
     });
@@ -216,10 +223,10 @@ const renderDetailView = (container, testId) => {
             test.seconds = parseInt(container.querySelector("#sec-input").value) || 0;
             saveToLocal();
             saveTimeBtn.style.background = "#22c55e";
-            saveTimeBtn.innerHTML = "Settings Saved";
+            saveTimeBtn.innerHTML = t("setting_saved");
             setTimeout(() => {
                 saveTimeBtn.style.background = "var(--primary-blue)";
-                saveTimeBtn.innerHTML = "Save Settings";
+                saveTimeBtn.innerHTML = t("save_settings");
             }, 1500);
         };
     }
